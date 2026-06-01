@@ -12,8 +12,8 @@
 ### New Files
 - `LICENSE` (MIT).
 - `CONTRIBUTING.md` — how to add workflows, templates, and fixtures.
+- `AGENTS.md` — bootstrap and maintenance instructions for Codex users.
 - `CLAUDE.md` — bootstrap instructions for Claude Code users.
-- `CODEX.md` — bootstrap instructions for Codex users.
 - `scripts/init.mjs` — copies templates to a new project directory.
 - `scripts/doctor.mjs` — checks if a project satisfies bootstrap gate conditions.
 - `examples/template-adoption/README.md` — explains fixture scenarios.

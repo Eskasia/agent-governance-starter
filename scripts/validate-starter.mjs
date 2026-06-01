@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = process.argv[2] ? path.resolve(process.argv[2]) : path.resolve('.');
+
 const requiredExampleDocs = [
   'PROJECT_BRIEF.md',
   'SPEC.md',
@@ -12,16 +13,28 @@ const requiredExampleDocs = [
   'AGENTS.md',
   'TECH_STACK.md',
 ];
+
 const projectOutputDocs = new Set([
   'AGENTS.md',
+  'AGENT_RUNTIME.md',
   'AI_SECURITY_REVIEW.md',
+  'API_CONTRACT.md',
   'CONTEXT.md',
-  'DESIGN.md',
+  'DATA_MODEL.md',
+  'DESIGN_REVIEW.md',
+  'DESIGN_SYSTEM.md',
+  'ENV_CHECKLIST.md',
+  'EVAL_PLAN.md',
+  'MACOS_RELEASE_CHECKLIST.md',
   'OPEN_LOOPS.md',
+  'PRESENTATION_BRIEF.md',
   'PROJECT_BRIEF.md',
   'RAG_DESIGN.md',
   'SPEC.md',
+  'TASK_CONTRACT.md',
   'TECH_STACK.md',
+  'TESTER_HANDOFF.md',
+  'UI_SPEC.md',
   'assets/ASSET_MANIFEST.md',
   'docs/adr/*.md',
 ]);
@@ -48,24 +61,89 @@ function fail(errors, message) {
   errors.push(message);
 }
 
-const errors = [];
-
-// Check required root files
-for (const file of ['README.md', 'LICENSE', 'CONTRIBUTING.md', '.gitignore', 'VALIDATION.md']) {
+function requireFile(errors, file) {
   if (!exists(file)) fail(errors, `Missing ${file}`);
 }
 
-// Check required directories
-for (const dir of ['startup', 'workflows', 'templates', 'scripts', 'examples/template-adoption']) {
+function requireIncludes(errors, file, snippets) {
+  if (!exists(file)) {
+    fail(errors, `Missing ${file}`);
+    return;
+  }
+  const content = readFile(file);
+  for (const snippet of snippets) {
+    if (!content.includes(snippet)) fail(errors, `${file} missing required text: ${snippet}`);
+  }
+}
+
+const errors = [];
+
+for (const file of [
+  'README.md',
+  'AGENTS.md',
+  'CLAUDE.md',
+  'ANTIGRAVITY.md',
+  'LICENSE',
+  'CONTRIBUTING.md',
+  'SECURITY.md',
+  'ROADMAP.md',
+  '.gitignore',
+  'VALIDATION.md',
+  'docs/index.md',
+]) {
+  requireFile(errors, file);
+}
+
+for (const dir of ['startup', 'workflows', 'templates', 'scripts', 'docs', 'prompts', 'examples/template-adoption']) {
   if (!exists(dir)) fail(errors, `Missing directory: ${dir}`);
 }
 
-// Check startup files
 for (const file of ['startup/00-agent-start-here.md', 'startup/01-bootstrap-gates.md', 'startup/02-required-project-docs.md']) {
-  if (!exists(file)) fail(errors, `Missing startup file: ${file}`);
+  requireFile(errors, file);
 }
 
-// Check templates/README.md
+for (const file of [
+  'prompts/codex-new-project.md',
+  'prompts/claude-new-project.md',
+  'prompts/antigravity-new-project.md',
+]) {
+  requireIncludes(errors, file, [
+    'START_HERE.md',
+    'PROJECT_BRIEF.md',
+    'SPEC.md',
+    'CONTEXT.md',
+    'TASK_CONTRACT.md',
+    'OPEN_LOOPS.md',
+    'TECH_STACK.md',
+    'Q1-Q9',
+  ]);
+}
+
+requireIncludes(errors, 'README.md', [
+  'Agent-native project governance starter for Codex, Claude Code, and Antigravity',
+  'startup/01-bootstrap-gates.md',
+  'startup/02-required-project-docs.md',
+  'node codex-project-starter/scripts/doctor.mjs ./my-new-project',
+]);
+
+for (const file of ['README.md', 'CLAUDE.md', 'ANTIGRAVITY.md']) {
+  if (exists(file)) {
+    const content = readFile(file);
+    if (content.includes('then 01-bootstrap-gates.md') || content.includes('then 02-required-project-docs.md')) {
+      fail(errors, `${file} has ambiguous startup path in first-message text`);
+    }
+  }
+}
+
+requireIncludes(errors, 'scripts/init.mjs', ['--agent', '--profile', '--all', 'START_HERE.md']);
+requireIncludes(errors, 'scripts/doctor.mjs', ['--strict', 'warnings as failures']);
+requireIncludes(errors, '.github/workflows/validate-starter.yml', [
+  'node scripts/validate-starter.mjs .',
+  'node scripts/init.mjs "$RUNNER_TEMP/base" --agent codex',
+  'node scripts/doctor.mjs --strict examples/template-adoption/fullstack-ai-saas',
+  'node scripts/doctor.mjs --strict examples/template-adoption/macos-beta-handoff',
+]);
+
 if (!exists('templates/README.md')) {
   fail(errors, 'Missing templates/README.md');
 } else {
@@ -76,12 +154,6 @@ if (!exists('templates/README.md')) {
   }
 }
 
-// Check CI workflow
-if (!exists('.github/workflows/validate-starter.yml')) {
-  fail(errors, 'Missing .github/workflows/validate-starter.yml');
-}
-
-// Check example fixtures
 const examplesRoot = path.join(root, 'examples/template-adoption');
 if (fs.existsSync(examplesRoot)) {
   const exampleDirs = fs.readdirSync(examplesRoot, { withFileTypes: true })
@@ -98,7 +170,6 @@ if (fs.existsSync(examplesRoot)) {
   }
 }
 
-// Check stage-routing cross-references
 if (exists('workflows/stage-routing.md')) {
   const routing = readFile('workflows/stage-routing.md');
   for (const ref of markdownRefs(routing)) {
@@ -118,7 +189,6 @@ if (exists('workflows/stage-routing.md')) {
   fail(errors, 'Missing workflows/stage-routing.md');
 }
 
-// Check all markdown cross-references
 const allMarkdown = [];
 function collectMarkdown(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -137,16 +207,13 @@ for (const filePath of allMarkdown) {
   const relative = path.relative(root, filePath);
   const content = fs.readFileSync(filePath, 'utf8');
   for (const ref of markdownRefs(content)) {
-    // Skip glob patterns
     if (ref.includes('*')) continue;
-    // Check workflow/startup/docs references
     if (ref.startsWith('workflows/') || ref.startsWith('startup/') || ref.startsWith('docs/')) {
       if (!exists(ref)) fail(errors, `${relative} references missing file: ${ref}`);
     }
   }
 }
 
-// Check no old numbered files remain in root
 const rootFiles = fs.readdirSync(root).filter((file) => /^\d{2}-.+\.md$/.test(file));
 if (rootFiles.length > 0) {
   fail(errors, `Old numbered workflow files still in root: ${rootFiles.join(', ')}`);

@@ -13,6 +13,7 @@
 | UI 方向、狀態模型、domain flow 不確定，正式實作前要先玩一次 | `prototype`；通過後再回正式 repo 實作 | 需安裝 skill |
 | 大 repo 查 symbol、route、call graph、impact | CodeGraph，前提是已有 `.codegraph/` | 需安裝 plugin |
 | 里程碑 review、交接、壓縮上下文 | repomix | CLI 工具 |
+| 常見命令輸出很大、想壓縮 token：`ls/tree/read/grep/git diff/test/lint/tsc/playwright/docker logs` | RTK：`rtk <command>` | CLI 工具；已安裝時優先手動使用，不自動改寫所有命令 |
 | 階段完成同步文件 | `neat-freak` | 需安裝 skill |
 | 長 thread 或隔天接續 | `handoff` | 需安裝 skill |
 | 長任務、大輸出、context 快爆、compaction 後接不上 | 見 `docs/experiments/context-mode.md` | 實驗性 |
@@ -37,16 +38,11 @@
 | PPT、簡報、slide deck | 見 `workflows/presentation.md` | 本 repo |
 | 跨前端/後端/DB/安全/AI/部署任兩類以上 | 先由 lead agent 判斷是否分工 | 視 runtime 而定 |
 
-## 推薦工具來源
+## RTK 使用規則
 
-詳見 `workflows/recommended-tools.md`。以下為主要分類：
-
-| 類別 | 代表 repo | 用途 |
-|---|---|---|
-| 工程 skill | `mattpocock/skills` | grill-with-docs、tdd、diagnose、prototype、zoom-out、handoff |
-| 安全 skill | `trailofbits/skills` | audit prep、differential review、semgrep、codeql |
-| UI/UX skill | `Leonxlnx/taste-skill` | anti-slop、image-to-code、redesign |
-| 文件轉換 | `docling-project/docling`、`opendatalab/MinerU` | PDF/Office → Markdown/JSON |
-| 知識庫 | LLMwiki | 沉澱專案流程、錯誤模式、驗證命令 |
-| Agent 架構參考 | `humanlayer/12-factor-agents` | 已整理到 `workflows/production-agent.md` |
-| AI 系統設計參考 | `ombharatiya/ai-system-design-guide` | 已整理到 `workflows/ai-system-design.md` |
+- RTK 是 `rtk-ai/rtk` 的 CLI proxy，用途是把常見 shell 輸出在進入 LLM context 前壓縮；先用 `rtk --version` 和 `rtk gain` 確認裝的是 Rust Token Killer，不是同名 Rust Type Kit。
+- 適合：`rtk ls`、`rtk tree`、`rtk read`、`rtk grep`、`rtk git status`、`rtk git diff`、`rtk test <cmd>`、`rtk lint`、`rtk tsc`、`rtk playwright`、`rtk docker logs`。
+- 不適合：需要完整原文、精確行號、完整 diff、完整測試 log、完整 JSON、完整錯誤堆疊、法務/安全證據保存時；這些情況用原生命令並加範圍限制，例如 `sed -n '1,160p' file`。
+- 不在 Codex 全域啟用 Claude hook；Codex 內預設採「手動前綴」策略，只有當輸出可能很大時才加 `rtk`。
+- RTK 輸出只能做定位和摘要；真正要改檔前，仍要讀相關原始檔片段。
+- 用完可跑 `rtk gain` 看節省統計；沒有 tracking data 不代表不能用，只代表還沒累積資料。

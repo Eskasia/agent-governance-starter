@@ -1,54 +1,69 @@
-# 07 Starred Repo Addons
+# Recommended Tools
 
-這些是從 GitHub starred repos 補進工作流的候選，只在觸發條件出現時使用。
+推薦的 skill 和工具來源，按觸發條件選用。
 
-## 已進主流程
+## 核心 Skill 來源
 
-| Repo | 放進哪裡 |
-|---|---|
-| `openai/skills` | 官方 Codex skill catalog；已安裝常用基礎能力：OpenAI docs、Playwright、PDF、Vercel deploy、skill creator/installer、CLI creator、ChatGPT Apps |
-| `ComposioHQ/awesome-codex-skills` | 百寶箱清單；只安裝高頻少數：domain、lead、support ticket、webapp testing、MCP builder、deploy pipeline、content、PaperJSX、spreadsheet、meeting notes |
-| `mattpocock/skills` | 工程 workflow；既有核心 skill 已保留，新增 PRD、issue、triage、review、ubiquitous language、caveman、grill-me、write-a-skill |
-| `trailofbits/skills` | 安全與審查；已安裝 audit prep、differential review、semgrep、codeql、insecure defaults、supply chain、property-based testing、second opinion |
-| `aklofas/kicad-happy` | EDA / PCB / KiCad；已安裝完整 12 個 electronics skills |
-| `voidful/academic-skills` | 論文與學術研究；已安裝 `academic-research` 總入口 |
-| `op7418/guizang-ppt-skill` | 網頁 PPT / 橫向翻頁 / 雜誌風 / 瑞士風簡報；已安裝 `guizang-ppt-skill` |
-| `tw93/Kami` | 高質感文件與 landing page 排版；已安裝 `kami`，用於 one-pager、white paper、resume、portfolio、letter、slide deck、static landing page |
-| `nextlevelbuilder/ui-ux-pro-max-skill` | UI 設計系統方向 |
-| `Leonxlnx/taste-skill` | 防 AI 模板味 |
-| `pbakaus/impeccable` | 上線前 UI audit/polish |
-| `nexu-io/open-design` | disposable prototype |
-| `colbymchenry/codegraph` | 大 repo 結構理解 |
-| `sdyckjq-lab/llm-wiki-skill` | 個人知識庫 |
+| 來源 Repo | 類別 | 推薦安裝 | 備註 |
+|---|---|---|---|
+| `openai/skills` | 官方 Codex skill | OpenAI docs, Playwright, PDF, Vercel deploy, skill creator, CLI creator | 不需全量安裝 |
+| `mattpocock/skills` | 工程 workflow | grill-with-docs, tdd, diagnose, prototype, zoom-out, handoff, neat-freak | 依需求選裝 |
+| `trailofbits/skills` | 安全審查 | audit prep, differential review, semgrep, codeql, supply chain | 安全需求時安裝 |
+| `Leonxlnx/taste-skill` | UI/UX 審美 | design-taste-frontend, image-to-code, redesign | 依 UI 方向選 variant |
+| `voidful/academic-skills` | 論文研究 | academic-research | 學術任務時安裝 |
+| `op7418/guizang-ppt-skill` | 簡報 | guizang-ppt-skill | HTML 網頁簡報用 |
+| `tw93/Kami` | 文件排版 | kami | one-pager, resume, portfolio, landing page |
 
-## 建議作為參考，不強制安裝
+## UI / 前端補強
 
-| Repo | 觸發條件 |
-|---|---|
-| `VoltAgent/awesome-design-md` | 需要 DESIGN.md、品牌設計語言、landing page 方向 |
-| `DavidHDev/react-bits` | 需要高質感 React 動畫或展示元件 |
-| `uiverse-io/galaxy` | 需要 Tailwind/CSS 小元件靈感 |
-| `itshover/itshover` | 需要 Next.js / shadcn / React animated icons；用於有意圖的 hover/tap icon 動效 |
-| `shadcn-ui/ui` | 需要可維護、可客製的正式 app 元件 |
-| `projectdiscovery/nuclei` | preview/production URL 上線前 security smoke |
-| `docling-project/docling` | 文件轉 Markdown/JSON |
-| `opendatalab/MinerU` | 複雜 PDF / Office 文件解析 |
-| `emcie-co/parlant` | 客服 AI、受控回覆、policy-driven conversation |
-| `ashishps1/awesome-system-design-resources` | 架構設計、scalability、ADR 前置參考 |
-| `microsoft/ai-agents-for-beginners` | 學習 agent 架構 |
-| `addyosmani/agent-skills` | 工程品質 skill 參考 |
-| `RoggeOhta/awesome-codex-cli` | Codex CLI 工具/插件索引；作為找工具參考，不直接安裝 |
-| `mksglu/context-mode` | 長任務、大輸出、context/token 壓力、compaction continuity；先作實驗，不放進預設主流程 |
+| Repo | 觸發條件 | 用途 |
+|---|---|---|
+| `nextlevelbuilder/ui-ux-pro-max-skill` | 需要 UI 設計系統方向 | 設計系統生成 |
+| `pbakaus/impeccable` | 上線前 UI 驗收 | audit / polish |
+| `nexu-io/open-design` | 方向不確定需要原型 | disposable prototype |
+| `VoltAgent/awesome-design-md` | 需要 DESIGN.md 或品牌設計語言 | 設計文件參考 |
+| `DavidHDev/react-bits` | 需要高質感 React 元件 | 動畫 / 展示參考 |
+| `uiverse-io/galaxy` | 需要 CSS/Tailwind 小元件 | UI 靈感 |
+| `itshover/itshover` | 需要 animated icons | hover/tap micro-interaction |
+| `shadcn-ui/ui` | 需要可維護 app 元件 | 依 UI_SPEC 客製 |
 
-## 暫不放進主流程
+## 工程 / 知識管理
 
-- 帳號切換、桌面 agent harness、token 壓縮、模型推理引擎：只有你明確要優化 Codex 使用環境時再看。
-- 金融、交易、股票、TTS、內容成長：屬於特定專案 domain，不該污染全端初始流程；履歷/作品集若是排版交付才用 `kami`。
-- 多 agent 框架：先用現有 `$codex-auto-expert-team`，不要再疊第二套編排系統。
-- context/token 壓縮層：`mksglu/context-mode` 先以 `docs/experiments/context-mode.md` 實驗，不替代 LLMwiki、handoff、OPEN_LOOPS。
+| Repo | 觸發條件 | 用途 |
+|---|---|---|
+| `colbymchenry/codegraph` | 大 repo 需要結構理解 | symbol / call graph 查詢 |
+| `rtk-ai/rtk` | 常見 CLI 輸出過大、token 壓力高 | `rtk ls/read/grep/git diff/test/lint/tsc/playwright` 壓縮輸出；Codex 內採手動前綴 |
+| `sdyckjq-lab/llm-wiki-skill` | 需要沉澱跨專案知識 | 流程、錯誤模式、驗證命令 |
+| `docling-project/docling` | 需要文件轉 Markdown/JSON | PDF / Office 轉換 |
+| `opendatalab/MinerU` | 複雜 PDF / Office 解析 | 結構化文件抽取 |
+| `addyosmani/agent-skills` | 工程品質 skill 參考 | 不直接安裝，作為設計參考 |
+
+## 架構 / AI 系統參考
+
+| Repo | 觸發條件 | 用途 |
+|---|---|---|
+| `humanlayer/12-factor-agents` | production agent 設計 | 已整理到 `workflows/production-agent.md` |
+| `ombharatiya/ai-system-design-guide` | AI 系統設計 | 已整理到 `workflows/ai-system-design.md` |
+| `microsoft/ai-agents-for-beginners` | 學習 agent 架構 | 教學參考，不直接進流程 |
+| `emcie-co/parlant` | 客服 AI / 受控回覆 | 架構參考 |
+| `ashishps1/awesome-system-design-resources` | 系統架構設計 | ADR 前置參考 |
+
+## 安全
+
+| Repo | 觸發條件 | 用途 |
+|---|---|---|
+| `projectdiscovery/nuclei` | 上線前 security smoke | 只用在自有 URL |
+
+## 專業領域
+
+| Repo | 觸發條件 | 用途 |
+|---|---|---|
+| `aklofas/kicad-happy` | EDA / PCB / KiCad 任務 | 完整 12 個 electronics skills |
 
 ## 安裝原則
 
-- 不全量安裝 `ComposioHQ/awesome-codex-skills`，因為可發現 880 個 skill，會讓 skill 清單過度膨脹。
-- 官方 `openai/skills` 也只安裝高頻基礎能力，不把所有平台部署與 Figma skill 都裝進全域。
-- KiCad 屬於獨立專業領域，安裝完整套件；平常不觸發，只有 EDA/PCB 任務才用。
+- 不全量安裝任何 skill 合集；依任務需求選裝。
+- 專業領域 skill 平常不觸發，只在對應任務才啟用。
+- 版本、價格、模型排行等資訊必須現查，不依賴文件中的靜態數值。
+- context/token 壓力緩解工具（如 `mksglu/context-mode`）先以實驗方式使用，見 `docs/experiments/context-mode.md`。
+- RTK 已是 CLI 工具，不當成 Codex skill 全量安裝；除非要開發 RTK 本身，否則不安裝它 repo 內的 Rust/TDD/PR triage skills。
