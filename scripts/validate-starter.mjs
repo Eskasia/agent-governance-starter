@@ -123,7 +123,7 @@ requireIncludes(errors, 'README.md', [
   'Agent-native project governance starter for Codex, Claude Code, and Antigravity',
   'startup/01-bootstrap-gates.md',
   'startup/02-required-project-docs.md',
-  'node codex-project-starter/scripts/doctor.mjs ./my-new-project',
+  'node agent-governance-starter/scripts/doctor.mjs ./my-new-project',
 ]);
 
 for (const file of ['README.md', 'CLAUDE.md', 'ANTIGRAVITY.md']) {

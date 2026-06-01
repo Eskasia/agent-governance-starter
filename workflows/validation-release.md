@@ -61,8 +61,8 @@
 
 ## 收尾
 
-- 用 `$handoff` 記錄狀態與下一步。
-- 用 `$neat-freak` 同步 docs。
+- 用 `handoff` skill 記錄狀態與下一步。
+- 用 `neat-freak` skill 同步 docs。
 - 用 `repomix --compress` 做整體 review 或交接。
 - 里程碑後做 architecture hygiene：模組是否更深、介面是否更窄、命名是否更貼 domain、是否需要 `zoom-out` 或 `improve-codebase-architecture`。
 - 可重用經驗回寫 LLMwiki。

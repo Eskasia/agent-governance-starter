@@ -66,4 +66,4 @@
 - 專業領域 skill 平常不觸發，只在對應任務才啟用。
 - 版本、價格、模型排行等資訊必須現查，不依賴文件中的靜態數值。
 - context/token 壓力緩解工具（如 `mksglu/context-mode`）先以實驗方式使用，見 `docs/experiments/context-mode.md`。
-- RTK 已是 CLI 工具，不當成 Codex skill 全量安裝；除非要開發 RTK 本身，否則不安裝它 repo 內的 Rust/TDD/PR triage skills。
+- RTK 是 CLI 工具，不當成 Codex skill 全量安裝；除非要開發 RTK 本身，否則不安裝它 repo 內的 Rust/TDD/PR triage skills。

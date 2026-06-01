@@ -2,7 +2,7 @@
 
 ## 日常選工具
 
-以下 skill 名稱帶 `$` 前綴的是 Codex skill，需要先安裝對應 skill 才能使用。其他 agent runtime 請參考對應技能的安裝方式。
+以下 skill 名稱是可選 agent skill，需要先安裝對應 skill 才能使用。其他 agent runtime 請參考對應技能的安裝方式。
 
 | 情況 | 工具 | 備註 |
 |---|---|---|
@@ -13,7 +13,7 @@
 | UI 方向、狀態模型、domain flow 不確定，正式實作前要先玩一次 | `prototype`；通過後再回正式 repo 實作 | 需安裝 skill |
 | 大 repo 查 symbol、route、call graph、impact | CodeGraph，前提是已有 `.codegraph/` | 需安裝 plugin |
 | 里程碑 review、交接、壓縮上下文 | repomix | CLI 工具 |
-| 常見命令輸出很大、想壓縮 token：`ls/tree/read/grep/git diff/test/lint/tsc/playwright/docker logs` | RTK：`rtk <command>` | CLI 工具；已安裝時優先手動使用，不自動改寫所有命令 |
+| 常見命令輸出很大、想壓縮 token：`ls/tree/read/grep/git diff/test/lint/tsc/playwright/docker logs` | RTK：`rtk <command>` | CLI 工具；安裝後手動前綴使用，不自動改寫所有命令 |
 | 階段完成同步文件 | `neat-freak` | 需安裝 skill |
 | 長 thread 或隔天接續 | `handoff` | 需安裝 skill |
 | 長任務、大輸出、context 快爆、compaction 後接不上 | 見 `docs/experiments/context-mode.md` | 實驗性 |

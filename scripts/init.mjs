@@ -155,7 +155,7 @@ function startHereContent(agent, profile) {
 
 ## Purpose
 
-This project was initialized from codex-project-starter. The agent must complete intake, project documents, and a task contract before implementation starts.
+This project was initialized from agent-governance-starter. The agent must complete intake, project documents, and a task contract before implementation starts.
 
 ## Read Order
 
@@ -370,4 +370,4 @@ console.log();
 console.log('Next steps:');
 console.log('  1. Fill PROJECT_BRIEF.md with the one-line project direction and target user.');
 console.log('  2. Ask the agent to read START_HERE.md and its runtime instruction file.');
-console.log('  3. Run: node codex-project-starter/scripts/doctor.mjs <target-directory>');
+console.log('  3. Run: node agent-governance-starter/scripts/doctor.mjs <target-directory>');

@@ -17,7 +17,7 @@
 
 - 不要求每個新專案安裝。
 - 不取代專案文件與 memory as files。
-- 不取代 `$handoff` 的交接摘要。
+- 不取代 `handoff` skill 的交接摘要。
 - 不取代 LLMwiki 的長期知識沉澱。
 - 不用在短任務、小 repo、單檔修改、簡答。
 

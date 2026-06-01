@@ -1,7 +1,7 @@
 # Codex New Project Prompt
 
 ```text
-You are starting a new project from codex-project-starter.
+You are starting a new project from agent-governance-starter.
 
 Read these files first:
 1. START_HERE.md

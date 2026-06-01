@@ -9,16 +9,16 @@
 
 ```bash
 # 1. Clone this repo or keep it as a local reference
-git clone https://github.com/your-username/codex-project-starter.git
+git clone https://github.com/Eskasia/agent-governance-starter.git
 
 # 2. Initialize a new project with Codex defaults
-node codex-project-starter/scripts/init.mjs ./my-new-project
+node agent-governance-starter/scripts/init.mjs ./my-new-project
 
 # 3. Check the generated project docs
-node codex-project-starter/scripts/doctor.mjs ./my-new-project
+node agent-governance-starter/scripts/doctor.mjs ./my-new-project
 
 # 4. For all supported runtimes and a fullstack AI profile
-node codex-project-starter/scripts/init.mjs ./my-new-project --agent all --profile fullstack-ai
+node agent-governance-starter/scripts/init.mjs ./my-new-project --agent all --profile fullstack-ai
 ```
 
 ## First Message to Your Agent
