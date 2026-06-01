@@ -1,4 +1,4 @@
-# codex-project-starter
+# agent-governance-starter
 
 > Agent-native project governance starter for Codex, Claude Code, and Antigravity.
 > Clone, initialize the project docs, run doctor, then let the agent start from a governed intake instead of a blank prompt.
