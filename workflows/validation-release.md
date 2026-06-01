@@ -66,6 +66,6 @@
 - 用 `repomix --compress` 做整體 review 或交接。
 - 里程碑後做 architecture hygiene：模組是否更深、介面是否更窄、命名是否更貼 domain、是否需要 `zoom-out` 或 `improve-codebase-architecture`。
 - 可重用經驗回寫 LLMwiki。
-- 依 `09-agent-file-structure.md` 判斷是否需要更新 `AGENTS.md`、新增 `Skills/`、補 `Hooks/`、建立 `Subagents/`，或升級成 `Plugins/`。
+- 依 `workflows/agent-file-structure.md` 判斷是否需要更新 `AGENTS.md`、新增 `Skills/`、補 `Hooks/`、建立 `Subagents/`，或升級成 `Plugins/`。
 - 如果有 `AGENT_RUNTIME.md`，同步 state、tool、approval、verifier 的實際狀態。
 - 如果有 AI 系統文件，同步 RAG、eval、security、observability、rollback 的實際狀態。

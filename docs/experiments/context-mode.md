@@ -4,7 +4,7 @@
 
 ## 定位
 
-`mksglu/context-mode` 是 context / token 壓力緩解層，不是 `01-bootstrap-gates.md`、LLMwiki、handoff、OPEN_LOOPS 的替代品。
+`mksglu/context-mode` 是 context / token 壓力緩解層，不是 `startup/01-bootstrap-gates.md`、LLMwiki、handoff、OPEN_LOOPS 的替代品。
 
 它只在以下情況列入實驗：
 

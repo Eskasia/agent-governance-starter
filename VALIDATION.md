@@ -1,17 +1,21 @@
 # Validation
 
-## Local Check
+## Starter Consistency Check
 
-Run:
+Validates the starter repo itself (cross-references, directory structure, example fixtures):
 
 ```bash
 node scripts/validate-starter.mjs .
 ```
 
-Expected:
+Expected: `Starter validation passed.`
 
-```text
-Starter validation passed.
+## Project Doctor
+
+Validates a new project initialized from the starter templates (fixed documents, content quality, conditional document hints):
+
+```bash
+node scripts/doctor.mjs /path/to/your/project
 ```
 
 ## Template Adoption Fixtures
@@ -42,5 +46,4 @@ node scripts/validate-starter.mjs .
 ## Governance
 
 - Git repository initialized on branch `main`.
-- Initial baseline commit: `chore: baseline project starter governance`.
 - `.DS_Store`, `node_modules/`, and env files are ignored by `.gitignore`.

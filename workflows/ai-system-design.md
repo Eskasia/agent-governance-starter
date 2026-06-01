@@ -12,11 +12,11 @@
 
 | 類型 | 必讀文件 | 必補產物 |
 |---|---|---|
-| RAG / 知識庫問答 | `02-required-project-docs.md`、本文件 | `RAG_DESIGN.md`、`EVAL_PLAN.md` |
-| Agent / MCP / tool-use | `11-production-agent-workflow.md`、本文件 | `AGENT_RUNTIME.md`、`EVAL_PLAN.md`、必要時 `AI_SECURITY_REVIEW.md` |
-| 多租戶 AI SaaS | `03-fullstack-saas.md`、本文件 | `DATA_MODEL.md`、`API_CONTRACT.md`、`AI_SECURITY_REVIEW.md` |
-| 文件智能 / OCR / extraction | 本文件、必要時 `03-fullstack-saas.md` | `EVAL_PLAN.md`、資料 schema、抽取錯誤樣本 |
-| AI 上線 / preview | `05-validation-release.md`、本文件 | `EVAL_PLAN.md`、rollback / kill switch 記錄 |
+| RAG / 知識庫問答 | `startup/02-required-project-docs.md`、本文件 | `RAG_DESIGN.md`、`EVAL_PLAN.md` |
+| Agent / MCP / tool-use | `workflows/production-agent.md`、本文件 | `AGENT_RUNTIME.md`、`EVAL_PLAN.md`、必要時 `AI_SECURITY_REVIEW.md` |
+| 多租戶 AI SaaS | `workflows/fullstack.md`、本文件 | `DATA_MODEL.md`、`API_CONTRACT.md`、`AI_SECURITY_REVIEW.md` |
+| 文件智能 / OCR / extraction | 本文件、必要時 `workflows/fullstack.md` | `EVAL_PLAN.md`、資料 schema、抽取錯誤樣本 |
+| AI 上線 / preview | `workflows/validation-release.md`、本文件 | `EVAL_PLAN.md`、rollback / kill switch 記錄 |
 
 ## RAG Gate
 

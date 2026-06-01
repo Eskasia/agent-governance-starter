@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const root = process.argv[2] ? path.resolve(process.argv[2]) : path.resolve('/Users/william/codex-project-starter');
+const root = process.argv[2] ? path.resolve(process.argv[2]) : path.resolve('.');
 const requiredExampleDocs = [
   'PROJECT_BRIEF.md',
   'SPEC.md',
@@ -44,83 +44,49 @@ function markdownRefs(text) {
   return [...refs];
 }
 
-function localWorkflowRefs(text) {
-  return markdownRefs(text).filter((ref) => /^\d{2}-.+\.md$/.test(ref) || ['README.md', 'BOOTSTRAP.md', 'INDEX.md', 'CHANGELOG.md'].includes(ref));
-}
-
-function templateDocNames(text) {
-  return markdownRefs(text).filter((ref) => /^[A-Z0-9_]+\.md$/.test(ref));
-}
-
 function fail(errors, message) {
   errors.push(message);
 }
 
 const errors = [];
 
-if (!exists('README.md')) {
-  fail(errors, 'Missing README.md');
-} else {
-  for (const ref of localWorkflowRefs(readFile('README.md'))) {
-    if (!exists(ref)) fail(errors, `README.md references missing file: ${ref}`);
-  }
+// Check required root files
+for (const file of ['README.md', 'LICENSE', 'CONTRIBUTING.md', '.gitignore', 'VALIDATION.md']) {
+  if (!exists(file)) fail(errors, `Missing ${file}`);
 }
 
+// Check required directories
+for (const dir of ['startup', 'workflows', 'templates', 'scripts', 'examples/template-adoption']) {
+  if (!exists(dir)) fail(errors, `Missing directory: ${dir}`);
+}
+
+// Check startup files
+for (const file of ['startup/00-agent-start-here.md', 'startup/01-bootstrap-gates.md', 'startup/02-required-project-docs.md']) {
+  if (!exists(file)) fail(errors, `Missing startup file: ${file}`);
+}
+
+// Check templates/README.md
 if (!exists('templates/README.md')) {
   fail(errors, 'Missing templates/README.md');
 } else {
-  for (const doc of templateDocNames(readFile('templates/README.md'))) {
+  const templateReadme = readFile('templates/README.md');
+  const templateRefs = markdownRefs(templateReadme).filter((ref) => /^[A-Z0-9_]+\.md$/.test(ref));
+  for (const doc of templateRefs) {
     if (!exists(`templates/${doc}`)) fail(errors, `templates/README.md lists missing template: templates/${doc}`);
   }
 }
 
-if (exists('12-stage-routing.md')) {
-  const routing = readFile('12-stage-routing.md');
-  for (const ref of markdownRefs(routing)) {
-    if (ref.startsWith('templates/')) {
-      if (!exists(ref)) fail(errors, `12-stage-routing.md references missing template path: ${ref}`);
-      continue;
-    }
-    if (/^[A-Z0-9_]+\.md$/.test(ref) && !exists(`templates/${ref}`) && !projectOutputDocs.has(ref)) {
-      fail(errors, `12-stage-routing.md output lacks template or project-output allowlist: ${ref}`);
-    }
-    if (/^\d{2}-.+\.md$/.test(ref) && !exists(ref)) {
-      fail(errors, `12-stage-routing.md references missing workflow file: ${ref}`);
-    }
-  }
-} else {
-  fail(errors, 'Missing 12-stage-routing.md');
-}
-
-const rootFiles = fs.readdirSync(root).filter((file) => /^\d{2}-.+\.md$/.test(file));
-const byPrefix = new Map();
-for (const file of rootFiles) {
-  const prefix = file.slice(0, 2);
-  if (!byPrefix.has(prefix)) byPrefix.set(prefix, []);
-  byPrefix.get(prefix).push(file);
-}
-for (const [prefix, files] of byPrefix) {
-  if (files.length <= 1) continue;
-  fail(errors, `Duplicate workflow prefix ${prefix}: ${files.join(', ')}`);
-}
-
-if (!exists('.gitignore')) {
-  fail(errors, 'Missing .gitignore');
-}
-
-if (!exists('VALIDATION.md')) {
-  fail(errors, 'Missing VALIDATION.md');
-}
-
+// Check CI workflow
 if (!exists('.github/workflows/validate-starter.yml')) {
   fail(errors, 'Missing .github/workflows/validate-starter.yml');
 }
 
+// Check example fixtures
 const examplesRoot = path.join(root, 'examples/template-adoption');
-if (!fs.existsSync(examplesRoot)) {
-  fail(errors, 'Missing examples/template-adoption');
-} else {
-  const exampleDirs = fs.readdirSync(examplesRoot, { withFileTypes: true }).filter((entry) => entry.isDirectory()).map((entry) => entry.name);
+if (fs.existsSync(examplesRoot)) {
+  const exampleDirs = fs.readdirSync(examplesRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name);
   if (exampleDirs.length < 2) {
     fail(errors, `Expected at least 2 template-adoption examples, found ${exampleDirs.length}`);
   }
@@ -132,6 +98,27 @@ if (!fs.existsSync(examplesRoot)) {
   }
 }
 
+// Check stage-routing cross-references
+if (exists('workflows/stage-routing.md')) {
+  const routing = readFile('workflows/stage-routing.md');
+  for (const ref of markdownRefs(routing)) {
+    if (ref.startsWith('templates/')) {
+      if (!exists(ref)) fail(errors, `stage-routing.md references missing template path: ${ref}`);
+      continue;
+    }
+    if (ref.startsWith('workflows/') || ref.startsWith('startup/') || ref.startsWith('docs/')) {
+      if (!exists(ref)) fail(errors, `stage-routing.md references missing file: ${ref}`);
+      continue;
+    }
+    if (/^[A-Z0-9_]+\.md$/.test(ref) && !exists(`templates/${ref}`) && !projectOutputDocs.has(ref)) {
+      fail(errors, `stage-routing.md output lacks template or project-output allowlist: ${ref}`);
+    }
+  }
+} else {
+  fail(errors, 'Missing workflows/stage-routing.md');
+}
+
+// Check all markdown cross-references
 const allMarkdown = [];
 function collectMarkdown(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -149,9 +136,20 @@ collectMarkdown(root);
 for (const filePath of allMarkdown) {
   const relative = path.relative(root, filePath);
   const content = fs.readFileSync(filePath, 'utf8');
-  for (const ref of localWorkflowRefs(content)) {
-    if (!exists(ref)) fail(errors, `${relative} references missing file: ${ref}`);
+  for (const ref of markdownRefs(content)) {
+    // Skip glob patterns
+    if (ref.includes('*')) continue;
+    // Check workflow/startup/docs references
+    if (ref.startsWith('workflows/') || ref.startsWith('startup/') || ref.startsWith('docs/')) {
+      if (!exists(ref)) fail(errors, `${relative} references missing file: ${ref}`);
+    }
   }
+}
+
+// Check no old numbered files remain in root
+const rootFiles = fs.readdirSync(root).filter((file) => /^\d{2}-.+\.md$/.test(file));
+if (rootFiles.length > 0) {
+  fail(errors, `Old numbered workflow files still in root: ${rootFiles.join(', ')}`);
 }
 
 if (errors.length > 0) {

@@ -7,7 +7,7 @@
 | 方向不確定，需要先看畫面感 | Open Design | disposable prototype / HTML demo |
 | UI 方向、互動流程、狀態模型或資料模型還不確定 | `prototype` | 可丟棄互動原型、UI variants 或 terminal state-model demo |
 | 要定產品類型、設計系統、配色、字體、版面 | `ui-ux-pro-max` | UI_SPEC 的 design direction |
-| 有截圖、generated UI 或現有 App，要反推可交付設計規範、設計圖、素材或可互動初稿 | `15-design-system-from-screenshots.md` + `ui-ux-pro-max` | DESIGN_SYSTEM、screen map、assets manifest、side-by-side critique |
+| 有截圖、generated UI 或現有 App，要反推可交付設計規範、設計圖、素材或可互動初稿 | `workflows/design-system-from-screenshots.md` + `ui-ux-pro-max` | DESIGN_SYSTEM、screen map、assets manifest、side-by-side critique |
 | 畫面能跑但像 AI 模板、太普通 | `design-taste-frontend` | anti-slop 改版方向 |
 | 已決定視覺方向，需要更強前端審美規則 | Taste Skill variants | 高質感 UI 語言、動效、密度與版面約束 |
 | 要上線或給人試用前 | `impeccable audit/polish` | DESIGN_REVIEW |
@@ -53,7 +53,7 @@
 
 ## 截圖反推 Design System
 
-- 只要使用者提供 App 截圖、generated UI、現有 UI 或競品畫面，並要求設計規範、設計圖、design tokens、icon、背景素材或前端初稿，就讀 `15-design-system-from-screenshots.md`。
+- 只要使用者提供 App 截圖、generated UI、現有 UI 或競品畫面，並要求設計規範、設計圖、design tokens、icon、背景素材或前端初稿，就讀 `workflows/design-system-from-screenshots.md`。
 - 先產出 `DESIGN_SYSTEM.md`，不要直接重畫 UI。
 - 規範必須從截圖歸納具體規則，並指出不一致處；每條規範都要寫「適用場景」和「不要怎麼用」。
 - 設計圖要覆蓋每個 tab、彈窗、核心狀態；素材要保存到 `assets/` 或專案既有靜態資源目錄，並建立 manifest。

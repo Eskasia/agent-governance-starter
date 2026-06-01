@@ -4,7 +4,7 @@
 
 不適用：單次 AI draft、單次摘要、單次分類、只在本機手動執行的研究輔助；這些先用普通 `TASK_CONTRACT.md` 和測試驗證即可。
 
-若同時涉及 RAG、MCP、long-term memory、eval pipeline、多租戶資料、文件智能或 provider fallback，還要讀 `14-ai-system-design-workflow.md`。
+若同時涉及 RAG、MCP、long-term memory、eval pipeline、多租戶資料、文件智能或 provider fallback，還要讀 `workflows/ai-system-design.md`。
 
 ## 核心原則
 

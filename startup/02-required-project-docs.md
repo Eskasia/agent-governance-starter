@@ -14,14 +14,7 @@
 
 ## 文件結構分流
 
-| 類型 | 寫到哪裡 |
-|---|---|
-| 來源、決策、錯誤模式、驗證命令 | `LLMwiki` 或專案 docs |
-| 穩定偏好、專案規則、禁止事項、常用命令 | `AGENTS.md` |
-| 重複流程、提示、腳本、模板 | `Skills/` |
-| 危險命令、格式檢查、提交前檢查、通知、清理 | `Hooks/` |
-| reviewer、test-runner、安全審查等獨立角色 | `Subagents/` |
-| 團隊要一致安裝的能力 | `Plugins/` |
+收尾時判斷新經驗該寫到哪裡，詳見 `workflows/agent-file-structure.md`。
 
 ## 條件式文件
 

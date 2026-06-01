@@ -7,10 +7,10 @@
 - 不准同時啟用所有 skill；只能依風險選工具。
 - 每個任務都要有輸入、可用工具、預期輸出、驗證方式、不做事項。
 - UI、資料模型、部署、權限、金鑰、第三方服務，任何一項不清楚都要先寫入文件或列為 open loop。
-- 不准把所有新規則都塞進 `AGENTS.md`；先依 `09-agent-file-structure.md` 判斷該寫入 LLMwiki、AGENTS、Skills、Hooks、Subagents 或 Plugins。
+- 不准把所有新規則都塞進 `AGENTS.md`；先依 `workflows/agent-file-structure.md` 判斷該寫入 LLMwiki、AGENTS、Skills、Hooks、Subagents 或 Plugins。
 - 做 production-facing LLM agent、自動化、多步工具調用或 human approval 前，必須先建立 `AGENT_RUNTIME.md`；單次 AI draft / 摘要 / 分類不需要。
-- 做 RAG、AI agent、MCP、eval pipeline、多租戶 AI SaaS、文件智能或 AI 系統設計前，先讀 `14-ai-system-design-workflow.md`，只採用符合當前專案的 gate。
-- 使用者描述「目前做到某階段、要交付某對象、要產出某種包」時，先讀 `12-stage-routing.md` 做階段分流。
+- 做 RAG、AI agent、MCP、eval pipeline、多租戶 AI SaaS、文件智能或 AI 系統設計前，先讀 `workflows/ai-system-design.md`，只採用符合當前專案的 gate。
+- 使用者描述「目前做到某階段、要交付某對象、要產出某種包」時，先讀 `workflows/stage-routing.md` 做階段分流。
 
 ## 開工前回報格式
 

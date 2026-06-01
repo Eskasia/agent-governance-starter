@@ -10,7 +10,7 @@
 - 要完整補齊 tabs、彈窗、狀態頁、空狀態、錯誤狀態。
 - 要生成圖標、背景圖、插畫等素材，並保存到專案 `assets/` 或既有靜態資源目錄。
 
-不適用：只有一句產品概念、沒有截圖或既有視覺參考時；此時先走 `04-ui-ux-workflow.md` 的 UI_SPEC 與 Open Design prototype。
+不適用：只有一句產品概念、沒有截圖或既有視覺參考時；此時先走 `workflows/ui-ux.md` 的 UI_SPEC 與 Open Design prototype。
 
 ## 工具分流
 

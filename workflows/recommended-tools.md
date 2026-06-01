@@ -45,7 +45,7 @@
 - 帳號切換、桌面 agent harness、token 壓縮、模型推理引擎：只有你明確要優化 Codex 使用環境時再看。
 - 金融、交易、股票、TTS、內容成長：屬於特定專案 domain，不該污染全端初始流程；履歷/作品集若是排版交付才用 `kami`。
 - 多 agent 框架：先用現有 `$codex-auto-expert-team`，不要再疊第二套編排系統。
-- context/token 壓縮層：`mksglu/context-mode` 先以 `13-context-pressure-workflow.md` 實驗，不替代 LLMwiki、handoff、OPEN_LOOPS。
+- context/token 壓縮層：`mksglu/context-mode` 先以 `docs/experiments/context-mode.md` 實驗，不替代 LLMwiki、handoff、OPEN_LOOPS。
 
 ## 安裝原則
 
