@@ -108,6 +108,10 @@ if (!exists('.gitignore')) {
   fail(errors, 'Missing .gitignore');
 }
 
+if (!exists('VALIDATION.md')) {
+  fail(errors, 'Missing VALIDATION.md');
+}
+
 if (!exists('.github/workflows/validate-starter.yml')) {
   fail(errors, 'Missing .github/workflows/validate-starter.yml');
 }

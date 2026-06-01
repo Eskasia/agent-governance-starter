@@ -37,3 +37,5 @@ Run:
 ```bash
 node /Users/william/codex-project-starter/scripts/validate-starter.mjs
 ```
+
+Validation evidence and adoption fixtures are documented in `VALIDATION.md`.
