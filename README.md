@@ -2,6 +2,10 @@
 
 > Agent-native project governance starter for Codex, Claude Code, and Antigravity.
 
+[![CI](https://github.com/Eskasia/agent-governance-starter/actions/workflows/validate-starter.yml/badge.svg)](https://github.com/Eskasia/agent-governance-starter/actions/workflows/validate-starter.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Node >=20](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](package.json)
+
 `agent-governance-starter` is a governance bootstrap generator. It creates project intake docs, task contracts, runtime entrypoints, and doctor checks before an AI coding agent starts implementation.
 
 It is not a runtime framework, not an app template, not a PRD prompt pack, and not a multi-agent orchestrator.
@@ -96,11 +100,22 @@ npm run ci
 
 Fixture examples live under `examples/template-adoption/` and include expected doctor JSON for the base-minimal case.
 
+## Runtime Proof
+
+Runtime proof commands validate generated Codex, Claude Code, and Antigravity entrypoints in mock mode by default. Real runtime proof is opt-in and only runs when `RUNTIME_PROOF_REAL=1` is set with the matching local CLI available.
+
+```bash
+npm run runtime:proof
+RUNTIME_PROOF_REAL=1 npm run runtime:proof
+```
+
 ## Source repo map
 
 | Path | Purpose |
 |---|---|
+| `.github/` | CI workflows, issue templates, PR template, and release notes config |
 | `AGENTS.md` | Canonical maintenance rules for this starter |
+| `docs/runtime-proof.md` | Mock and opt-in real runtime proof contract |
 | `startup/00-agent-start-here.md` | Mandatory behavior and reporting format |
 | `startup/01-bootstrap-gates.md` | Q1-Q9 intake gates |
 | `startup/02-required-project-docs.md` | Fixed and conditional output docs |
@@ -110,8 +125,21 @@ Fixture examples live under `examples/template-adoption/` and include expected d
 | `profiles/` | Profile manifests |
 | `schemas/` | JSON Schemas for profile docs and doctor output |
 | `scripts/` | `init`, `doctor`, and starter validation |
+| `prompts/` | Pasteable first prompts for supported runtime adapters |
+| `tests/runtime/` | Runtime proof expected headings, schema, and skill fixture |
 | `workflows/` | Human-readable workflow routing |
 | `examples/template-adoption/` | Filled fixtures and expected doctor output |
+
+## Community
+
+| Area | Link |
+|---|---|
+| Issues | `.github/ISSUE_TEMPLATE/` |
+| Pull requests | `.github/pull_request_template.md` |
+| Security | `SECURITY.md` |
+| Contributing | `CONTRIBUTING.md` |
+| Code of conduct | `CODE_OF_CONDUCT.md` |
+| Release notes | `.github/release.yml` |
 
 ## First agent message
 

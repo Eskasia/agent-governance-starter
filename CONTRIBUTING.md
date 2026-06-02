@@ -29,6 +29,7 @@
 - Add the generated-project version in `scripts/init.mjs`.
 - Add a direct prompt under `prompts/` if users should be able to paste it into the runtime.
 - Update `README.md`, `docs/index.md`, `VALIDATION.md`, and `scripts/validate-starter.mjs`.
+- Run `npm run runtime:proof` when changing runtime adapters, runtime templates, profiles, or first-response expectations.
 
 ## Adding an Example Fixture
 
