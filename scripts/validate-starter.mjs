@@ -94,6 +94,7 @@ const errors = [];
 
 for (const file of [
   'README.md',
+  'package.json',
   'AGENTS.md',
   'CLAUDE.md',
   'ANTIGRAVITY.md',
@@ -138,6 +139,15 @@ requireIncludes(errors, 'README.md', [
   'startup/01-bootstrap-gates.md',
   'startup/02-required-project-docs.md',
   'node agent-governance-starter/scripts/doctor.mjs ./my-new-project',
+]);
+
+requireIncludes(errors, 'package.json', [
+  '"check"',
+  '"validate"',
+  '"smoke:base"',
+  '"smoke:fullstack"',
+  '"fixtures"',
+  '"ci"',
 ]);
 
 for (const file of ['README.md', 'CLAUDE.md', 'ANTIGRAVITY.md']) {
