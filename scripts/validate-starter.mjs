@@ -76,6 +76,20 @@ function requireIncludes(errors, file, snippets) {
   }
 }
 
+function lineCount(relativePath) {
+  return readFile(relativePath).split(/\r?\n/).length;
+}
+
+function requireRealNewlines(errors, file) {
+  if (!exists(file)) {
+    fail(errors, `Missing ${file}`);
+    return;
+  }
+  if (lineCount(file) < 2) {
+    fail(errors, `${file} appears to be single-line; keep generated files with real newlines`);
+  }
+}
+
 const errors = [];
 
 for (const file of [
@@ -139,10 +153,26 @@ requireIncludes(errors, 'scripts/init.mjs', ['--agent', '--profile', '--all', 'S
 requireIncludes(errors, 'scripts/doctor.mjs', ['--strict', 'warnings as failures']);
 requireIncludes(errors, '.github/workflows/validate-starter.yml', [
   'node scripts/validate-starter.mjs .',
+  'node --check scripts/init.mjs',
   'node scripts/init.mjs "$RUNNER_TEMP/base" --agent codex',
   'node scripts/doctor.mjs --strict examples/template-adoption/fullstack-ai-saas',
   'node scripts/doctor.mjs --strict examples/template-adoption/macos-beta-handoff',
 ]);
+
+for (const file of [
+  'scripts/init.mjs',
+  'scripts/doctor.mjs',
+  'scripts/validate-starter.mjs',
+  '.github/workflows/validate-starter.yml',
+]) {
+  requireRealNewlines(errors, file);
+}
+
+for (const file of fs.readdirSync(path.join(root, 'templates'))) {
+  if (file.endsWith('.md')) {
+    requireRealNewlines(errors, `templates/${file}`);
+  }
+}
 
 if (!exists('templates/README.md')) {
   fail(errors, 'Missing templates/README.md');
