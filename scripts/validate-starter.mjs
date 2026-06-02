@@ -212,7 +212,13 @@ for (const dir of ['startup', 'workflows', 'templates', 'scripts', 'docs', 'prom
   if (!exists(dir)) fail(errors, `Missing directory: ${dir}`);
 }
 
-for (const file of ['startup/00-agent-start-here.md', 'startup/01-bootstrap-gates.md', 'startup/02-required-project-docs.md']) {
+for (const file of [
+  'startup/00-agent-start-here.md',
+  'startup/01-bootstrap-gates.md',
+  'startup/02-required-project-docs.md',
+  'workflows/product-shape-tech-route.md',
+  'workflows/skill-and-plugin-adoption.md',
+]) {
   requireFile(errors, file);
 }
 
@@ -240,17 +246,71 @@ requireIncludes(errors, 'README.md', [
   'node-%3E%3D20',
   'startup/01-bootstrap-gates.md',
   'startup/02-required-project-docs.md',
+  'workflows/product-shape-tech-route.md',
+  'workflows/skill-and-plugin-adoption.md',
   'Generated base project tree',
   '## Runtime Proof',
   '## Community',
   'CODE_OF_CONDUCT.md',
   'README.md',
   'node agent-governance-starter/scripts/doctor.mjs ./my-new-project',
+  'product shape / technology route',
+]);
+
+requireIncludes(errors, 'startup/00-agent-start-here.md', [
+  'workflows/skill-and-plugin-adoption.md',
+]);
+
+requireIncludes(errors, 'startup/01-bootstrap-gates.md', [
+  '產品形態 / 技術路線 Gate',
+  'user-declared route',
+  'ai-recommended route',
+  'workflows/product-shape-tech-route.md',
+]);
+
+requireIncludes(errors, 'workflows/product-shape-tech-route.md', [
+  'user-declared route',
+  'ai-recommended route',
+  'Q1-Q9',
+  'PROJECT_BRIEF.md',
+  'TECH_STACK.md',
+  '新技術引入 Gate',
+]);
+
+requireIncludes(errors, 'workflows/skill-and-plugin-adoption.md', [
+  'reference-only',
+  'conditional workflow',
+  'runtime adapter',
+  '不全量導入',
+  'TECH_STACK.md',
+  'workflows/product-shape-tech-route.md',
+  'workflows/agent-file-structure.md',
+]);
+
+requireIncludes(errors, 'workflows/tool-routing.md', [
+  'workflows/skill-and-plugin-adoption.md',
+  'Understand-Anything',
+  'CodeGraph',
+  '大型 cybersecurity skill pack 只作 taxonomy 參考',
+  'Skill Creator / Find Skill 只用於重複流程',
+]);
+
+requireIncludes(errors, 'workflows/recommended-tools.md', [
+  'GitHub 候選來源分級',
+  'anthropics/skills',
+  'Lum1104/Understand-Anything',
+  'anthropics/knowledge-work-plugins',
+  'affaan-m/ECC',
+  '暫不採用',
+  '不全量安裝',
 ]);
 
 requireIncludes(errors, 'AGENTS.md', [
   'canonical source of truth',
   'thin adapters',
+  '## Coding Discipline',
+  'Think before coding',
+  'Make surgical edits',
 ]);
 
 requireIncludes(errors, 'CLAUDE.md', [
@@ -334,6 +394,13 @@ requireIncludes(errors, 'CODE_OF_CONDUCT.md', [
 requireIncludes(errors, 'docs/index.md', [
   'runtime-proof.md',
   'prompts/codex-new-project.md',
+  'workflows/skill-and-plugin-adoption.md',
+]);
+
+requireIncludes(errors, 'docs/tool-registry.md', [
+  'workflows/skill-and-plugin-adoption.md',
+  'Understand-Anything',
+  'find-skills',
 ]);
 
 requireIncludes(errors, 'VALIDATION.md', [
@@ -352,6 +419,9 @@ requireIncludes(errors, 'templates/runtime/START_HERE.md', [
   '{{PROFILE_NAME}}',
   '{{INTAKE_QUESTIONS}}',
   '{{REQUIRED_DOCUMENTS}}',
+  'Product Shape / Tech Route Gate',
+  'user-declared route',
+  'ai-recommended route',
 ]);
 
 requireIncludes(errors, 'templates/runtime/README.md', [
@@ -359,6 +429,66 @@ requireIncludes(errors, 'templates/runtime/README.md', [
   '{{PROFILE_NAME}}',
   '{{REQUIRED_DOCUMENTS}}',
   'doctor.mjs',
+  'product shape / technology route gate',
+]);
+
+requireIncludes(errors, 'templates/runtime/AGENTS.md', [
+  'product shape / technology route gate',
+  'user-declared route',
+  'ai-recommended route',
+  '## Coding Discipline',
+  'Think before coding',
+  'Make surgical edits',
+  'TECH_STACK.md',
+  'adoption gate',
+]);
+
+requireIncludes(errors, 'templates/fixed/PROJECT_BRIEF.md', [
+  '## 產品形態決策',
+  '決策模式',
+  '第一版產品形態',
+  'Q1-Q9 依據',
+]);
+
+requireIncludes(errors, 'templates/fixed/TECH_STACK.md', [
+  '## 技術路線決策',
+  '決策模式',
+  '唯一主路線',
+  '新技術引入 gate',
+  '| Frontend |',
+  '| Backend |',
+  '| Database |',
+  '| Main framework / SDK |',
+]);
+
+requireIncludes(errors, 'docs/adr/000-template.md', [
+  '## Reevaluation Triggers',
+  '## Switching Cost',
+  '## Adoption Gate',
+]);
+
+for (const file of [
+  'prompts/codex-new-project.md',
+  'prompts/claude-new-project.md',
+  'prompts/antigravity-new-project.md',
+]) {
+  requireIncludes(errors, file, [
+    'product shape / technology route',
+    'user-declared route',
+    'ai-recommended route',
+  ]);
+}
+
+requireIncludes(errors, 'scripts/doctor.mjs', [
+  'product shape decision should be documented',
+  'technology route decision should be documented',
+  'External repo/skill/plugin/framework adoption should be documented in TECH_STACK.md, ADR, or OPEN_LOOPS.md',
+]);
+
+requireIncludes(errors, 'scripts/init.mjs', [
+  'product shape / technology route mode',
+  'user-declared route',
+  'ai-recommended route',
 ]);
 
 for (const file of ['README.md', 'CLAUDE.md', 'ANTIGRAVITY.md']) {

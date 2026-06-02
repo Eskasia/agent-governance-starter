@@ -61,8 +61,8 @@ Fresh templates produce warnings until the project documents are filled.
 | `README.md` | Generated project entrypoint with read order and doctor command |
 | `START_HERE.md` | Read order, Q1-Q9 intake, profile documents, and gate before code |
 | `.agent-governance.json` | Machine-readable profile metadata for `doctor` |
-| `PROJECT_BRIEF.md`, `SPEC.md`, `CONTEXT.md` | Problem, scope, acceptance criteria, and shared language |
-| `TASK_CONTRACT.md`, `OPEN_LOOPS.md`, `TECH_STACK.md` | Executable task plan, unresolved decisions, and verified commands |
+| `PROJECT_BRIEF.md`, `SPEC.md`, `CONTEXT.md` | Problem, product shape, scope, acceptance criteria, and shared language |
+| `TASK_CONTRACT.md`, `OPEN_LOOPS.md`, `TECH_STACK.md` | Executable task plan, unresolved decisions, product technology route, and verified commands |
 | `AGENTS.md` | Canonical project rule source |
 | Conditional docs | API, data, env, RAG, eval, AI security, macOS release, tester handoff |
 | Runtime adapters | Claude thin adapter and Antigravity `.agents/` skills when requested |
@@ -119,6 +119,8 @@ RUNTIME_PROOF_REAL=1 npm run runtime:proof
 | `startup/00-agent-start-here.md` | Mandatory behavior and reporting format |
 | `startup/01-bootstrap-gates.md` | Q1-Q9 intake gates |
 | `startup/02-required-project-docs.md` | Fixed and conditional output docs |
+| `workflows/product-shape-tech-route.md` | Product shape and technology route decision gate |
+| `workflows/skill-and-plugin-adoption.md` | External repo, skill, plugin, and SDK adoption gate |
 | `templates/fixed/` | Always generated governance docs |
 | `templates/conditional/` | Profile- or project-type-specific docs |
 | `templates/runtime/` | Canonical runtime template material |
@@ -146,7 +148,7 @@ RUNTIME_PROOF_REAL=1 npm run runtime:proof
 Use this after running `init`:
 
 ```text
-Read START_HERE.md and the runtime entrypoint for this agent. List files read, fixed documents present, conditional documents likely needed, and current blockers. Start Q1-Q9 intake one question at a time. Do not write code until intake, required docs, TASK_CONTRACT.md, and OPEN_LOOPS.md are confirmed.
+Read START_HERE.md and the runtime entrypoint for this agent. List files read, fixed documents present, conditional documents likely needed, product shape / technology route mode, and current blockers. Start Q1-Q9 intake one question at a time. Do not write code until intake, product shape / technology route, required docs, TASK_CONTRACT.md, and OPEN_LOOPS.md are confirmed.
 ```
 
 ## Public boundaries

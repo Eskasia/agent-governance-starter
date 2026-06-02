@@ -3,8 +3,10 @@
 ## 不可跳過的規則
 
 - 不准在 Q1-Q9 問診完成前寫 code。
+- 不准在產品形態 / 技術路線 gate 完成前寫 code；Q1-Q9 後先讀 `workflows/product-shape-tech-route.md`。
 - 不准直接把使用者的一句想法變成完整實作。
 - 不准同時啟用所有 skill；只能依風險選工具。
+- 引入外部 GitHub repo、skill、plugin、agent pack 或 SDK 前，先讀 `workflows/skill-and-plugin-adoption.md`。
 - 每個任務都要有輸入、可用工具、預期輸出、驗證方式、不做事項。
 - UI、資料模型、部署、權限、金鑰、第三方服務，任何一項不清楚都要先寫入文件或列為 open loop。
 - 不准把所有新規則都塞進 `AGENTS.md`；先依 `workflows/agent-file-structure.md` 判斷該寫入 LLMwiki、AGENTS、Skills、Hooks、Subagents 或 Plugins。
@@ -26,6 +28,7 @@ Agent 讀完本資料夾後，先回報：
 - 條件式文件：
 - 可能使用的 skill / tool：
 - 可能需要的文件結構分流：
+- 產品形態 / 技術路線模式：user-declared route / ai-recommended route
 - 是否需要 AGENT_RUNTIME.md：
 - 是否需要 RAG_DESIGN.md / EVAL_PLAN.md / AI_SECURITY_REVIEW.md：
 - 目前不能開始寫 code 的原因：

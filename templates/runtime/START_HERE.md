@@ -21,6 +21,15 @@ This project was initialized from agent-governance-starter. The agent must compl
 
 {{INTAKE_QUESTIONS}}
 
+## Product Shape / Tech Route Gate
+
+After Q1-Q9 and before implementation, decide one route mode:
+
+- `user-declared route`: the user already named the product shape or technology route; check it against Q1-Q9 and document gaps or risks.
+- `ai-recommended route`: the user does not know the route; recommend one first-version product shape and one main technology route from Q1-Q9.
+
+Write the product shape decision in `PROJECT_BRIEF.md` and the technology route decision in `TECH_STACK.md`. Do not write code while either decision is still an open loop.
+
 ## Required Documents
 
 {{REQUIRED_DOCUMENTS}}
@@ -35,4 +44,4 @@ This project was initialized from agent-governance-starter. The agent must compl
 
 ## Gate
 
-Do not write code until Q1-Q9 are answered, required documents are filled, open loops are explicit, and the user confirms the task plan.
+Do not write code until Q1-Q9 are answered, the product shape / technology route gate is complete, required documents are filled, open loops are explicit, and the user confirms the task plan.

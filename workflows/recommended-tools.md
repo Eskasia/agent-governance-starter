@@ -2,6 +2,22 @@
 
 推薦的 skill 和工具來源，按觸發條件選用。
 
+引入任何外部來源前，先讀 `workflows/skill-and-plugin-adoption.md`；本檔只列候選與路由，不代表已安裝或全域採用。
+
+## GitHub 候選來源分級
+
+| 來源 | 採用層級 | 融合方式 | 不做 |
+|---|---|---|---|
+| `anthropics/skills` | conditional workflow | 參考 `SKILL.md` 結構、觸發條件、驗證欄位 | 不把示例 skills 全量導入 |
+| `Lum1104/Understand-Anything` | conditional workflow | 大型陌生 repo 才用 knowledge graph onboarding | 不把 `.understand-anything/` 當 required artifact |
+| CodeGraph | conditional workflow | `.codegraph/` 已存在或明確要求索引時查 symbol / call graph / impact | 不取代 `rg`、讀檔、測試 |
+| `Leonxlnx/taste-skill` | conditional workflow | UI 任務依 `UI_SPEC.md` / `DESIGN_SYSTEM.md` 選單一 variant | 不同 taste variants 不同時全開 |
+| `anthropics/knowledge-work-plugins` | reference-only | 參考 plugin manifest、commands、skills 分層 | 不把 role plugins 變成 starter 預設 |
+| `affaan-m/ECC` | reference-only | 參考單一路線、分層規則、薄 adapter | 不複製 install system、hooks、agent catalog |
+| `mukul975/Anthropic-Cybersecurity-Skills` | reference-only | 安全任務可參考 MITRE / NIST taxonomy | 不導入數百個安全技能 |
+| academic research skill repos | conditional workflow | 研究、論文、citation 任務才啟用 | 不放進日常 coding path |
+| `pi`、Skill Creator Cloud、Find Skill、Awesome Shadcn UI | 暫不採用 | 先確認 repo 指向、license、維護狀態與任務匹配 | 不寫成主線規則 |
+
 ## 核心 Skill 來源
 
 | 來源 Repo | 類別 | 推薦安裝 | 備註 |

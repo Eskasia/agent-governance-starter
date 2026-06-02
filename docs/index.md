@@ -27,9 +27,11 @@
 | Fullstack product | `../workflows/fullstack.md` |
 | UI / UX | `../workflows/ui-ux.md` |
 | Validation and release | `../workflows/validation-release.md` |
+| Product shape / tech route | `../workflows/product-shape-tech-route.md` |
 | Tool selection | `../workflows/tool-routing.md` |
 | Tool availability | `tool-registry.md` |
 | Tool sources | `../workflows/recommended-tools.md` |
+| Skill and plugin adoption | `../workflows/skill-and-plugin-adoption.md` |
 | Presentation | `../workflows/presentation.md` |
 | Agent file structure | `../workflows/agent-file-structure.md` |
 | macOS build and release | `../workflows/macos-build-release.md` |

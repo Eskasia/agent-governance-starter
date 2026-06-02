@@ -287,6 +287,7 @@ Report:
 - files read
 - fixed documents present
 - conditional documents likely needed
+- product shape / technology route mode: user-declared route or ai-recommended route
 - open blockers
 - why code cannot start yet
 
@@ -325,7 +326,8 @@ Use when a project is newly initialized or the user asks to start governed agent
 1. Read ../../../START_HERE.md and ../../../AGENTS.md.
 2. Report files read, required documents present, likely conditional documents, and blockers.
 3. Ask Q1-Q9 one question at a time.
-4. Stop before implementation until intake, required docs, TASK_CONTRACT.md, and OPEN_LOOPS.md are confirmed.`;
+4. Decide product shape / technology route mode: user-declared route or ai-recommended route.
+5. Stop before implementation until intake, product shape / technology route, required docs, TASK_CONTRACT.md, and OPEN_LOOPS.md are confirmed.`;
 }
 
 function validationGateSkillContent() {
@@ -343,9 +345,10 @@ Use before starting implementation, before reporting completion, or before handi
 ## Steps
 
 1. Check PROJECT_BRIEF.md, SPEC.md, CONTEXT.md, TASK_CONTRACT.md, OPEN_LOOPS.md, AGENTS.md, and TECH_STACK.md.
-2. Confirm conditional documents exist when the project surface requires them.
-3. Run the repo-specific verification command if AGENTS.md defines one.
-4. Report passed checks, blocked checks, and open loops without treating warnings as completion.`;
+2. Confirm product shape / technology route decisions are documented before implementation starts.
+3. Confirm conditional documents exist when the project surface requires them.
+4. Run the repo-specific verification command if AGENTS.md defines one.
+5. Report passed checks, blocked checks, and open loops without treating warnings as completion.`;
 }
 
 function runtimeFiles(agent, profile) {
@@ -431,6 +434,7 @@ console.log();
 console.log(`Done. Copied ${stats.copied} template file(s), generated ${stats.generated} file(s), skipped ${stats.skipped} existing file(s).`);
 console.log();
 console.log('Next steps:');
-console.log('  1. Fill PROJECT_BRIEF.md with the one-line project direction and target user.');
-console.log('  2. Ask the agent to read START_HERE.md and its runtime instruction file.');
-console.log('  3. Run: node agent-governance-starter/scripts/doctor.mjs <target-directory>');
+console.log('  1. Fill PROJECT_BRIEF.md with the one-line project direction, target user, and product shape decision.');
+console.log('  2. Fill TECH_STACK.md with the user-declared or AI-recommended technology route.');
+console.log('  3. Ask the agent to read START_HERE.md and its runtime instruction file.');
+console.log('  4. Run: node agent-governance-starter/scripts/doctor.mjs <target-directory>');

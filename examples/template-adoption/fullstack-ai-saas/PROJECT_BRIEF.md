@@ -19,6 +19,14 @@
 - 對文件提問。
 - 回答必須顯示 citation。
 
+## 產品形態決策
+
+- 決策模式：ai-recommended route
+- 第一版產品形態：fullstack AI web app
+- Q1-Q9 依據：顧問 owner 需要自己點核心流程、上傳文件、登入後提問並看到 citation；資料、權限、RAG、eval、安全文件都會影響驗收。
+- 為什麼不是網站 / App / 小程序 / 純後端 / 管理系統等其他形態：landing page 不能驗證問答工作區；native app 和小程序會增加平台審核與裝置邊界；純 API 無法讓 owner 直接驗收；管理系統不是第一版核心。
+- 何時重新評估：若核心使用者改成外部系統、需要離線 mobile review、或 preview 驗收改成 API-only，再重新評估。
+
 ## 明確不做
 
 - 不做多語翻譯。
