@@ -98,6 +98,7 @@ try {
 }
 
 const projectDir = options.projectDir;
+const displayProjectDir = path.relative(process.cwd(), projectDir) || '.';
 
 function exists(relativePath) {
   return fs.existsSync(path.join(projectDir, relativePath));
@@ -205,7 +206,7 @@ function buildResult(profile) {
 
   return {
     schemaVersion: 1,
-    projectDir,
+    projectDir: displayProjectDir,
     profile: profile.name,
     status,
     strict: options.strict,
@@ -219,7 +220,7 @@ function buildResult(profile) {
 }
 
 function printHuman(result) {
-  console.log(`\nProject doctor: ${projectDir}`);
+  console.log(`\nProject doctor: ${displayProjectDir}`);
   if (options.strict) console.log('Mode: strict');
   console.log(`Profile: ${result.profile}`);
   console.log();

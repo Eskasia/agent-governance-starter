@@ -17,6 +17,7 @@ node_modules/
 *.swo
 
 # Build
+.tmp/
 dist/
 build/
 .next/
