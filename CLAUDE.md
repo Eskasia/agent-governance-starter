@@ -1,27 +1,7 @@
-# Claude Code Bootstrap
+# Claude Code Adapter
 
-This repository is an agent-native project governance starter. When starting a new project with Claude Code, follow this sequence:
+@AGENTS.md
 
-1. Read `startup/00-agent-start-here.md` - mandatory rules and reporting format.
-2. Read `startup/01-bootstrap-gates.md` - Q1-Q9 intake questions and gate conditions.
-3. Read `startup/02-required-project-docs.md` - fixed and conditional document requirements.
-4. Based on the project type, read the relevant files from `workflows/`.
-5. Do not write code until Q1-Q9 are answered and required documents are confirmed.
+AGENTS.md is the canonical rule source for this repository. This file is a thin Claude Code adapter and must not duplicate the full governance rules.
 
-## First Message to Claude Code
-
-```text
-This is a new project. Read startup/00-agent-start-here.md, then startup/01-bootstrap-gates.md, then startup/02-required-project-docs.md. List which files you read, which conditional documents this project needs, and start the Q1-Q9 intake. Do not write code until intake and documents are complete.
-```
-
-## Generated Project Message
-
-```text
-Read START_HERE.md and CLAUDE.md. List which files you read, which conditional documents this project needs, and start the Q1-Q9 intake. Do not write code until intake and documents are complete.
-```
-
-## Project Output Documents
-
-Fixed: `PROJECT_BRIEF.md`, `SPEC.md`, `CONTEXT.md`, `TASK_CONTRACT.md`, `OPEN_LOOPS.md`, `AGENTS.md`, `TECH_STACK.md`.
-
-Conditional: See `startup/02-required-project-docs.md` for the full list and trigger conditions.
+Claude-specific note: when starting from this source repo, follow the `AGENTS.md` required read order and then use Claude Code normally.

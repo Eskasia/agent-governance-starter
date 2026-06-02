@@ -5,7 +5,7 @@ You are starting a new project from agent-governance-starter.
 
 Read these files first:
 1. START_HERE.md
-2. ANTIGRAVITY.md
+2. .agents/AGENTS.md
 3. PROJECT_BRIEF.md
 4. SPEC.md
 5. CONTEXT.md

@@ -210,6 +210,22 @@ requireIncludes(errors, 'README.md', [
   'node agent-governance-starter/scripts/doctor.mjs ./my-new-project',
 ]);
 
+requireIncludes(errors, 'AGENTS.md', [
+  'canonical source of truth',
+  'thin adapters',
+]);
+
+requireIncludes(errors, 'CLAUDE.md', [
+  '@AGENTS.md',
+  'thin Claude Code adapter',
+]);
+
+requireIncludes(errors, 'ANTIGRAVITY.md', [
+  'not the official Antigravity runtime entrypoint',
+  '.agents/AGENTS.md',
+  '.agents/skills/*/SKILL.md',
+]);
+
 requireIncludes(errors, 'package.json', [
   '"check"',
   '"validate"',
@@ -228,7 +244,7 @@ for (const file of ['README.md', 'CLAUDE.md', 'ANTIGRAVITY.md']) {
   }
 }
 
-requireIncludes(errors, 'scripts/init.mjs', ['--agent', '--profile', '--all', 'START_HERE.md']);
+requireIncludes(errors, 'scripts/init.mjs', ['--agent', '--profile', '--all', 'START_HERE.md', '.agents/AGENTS.md', '.agents/skills/bootstrap-intake/SKILL.md']);
 requireIncludes(errors, 'scripts/doctor.mjs', ['--strict', '--json', 'warnings as failures']);
 requireIncludes(errors, '.github/workflows/validate-starter.yml', [
   'node scripts/validate-starter.mjs .',

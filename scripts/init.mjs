@@ -205,6 +205,7 @@ function writeGenerated(file, targetDir, content, stats) {
     return;
   }
 
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
   fs.writeFileSync(dest, `${content.trim()}\n`);
   console.log(`  GEN  ${file}`);
   stats.generated += 1;
@@ -230,7 +231,7 @@ This project was initialized from agent-governance-starter. The agent must compl
 ## Read Order
 
 1. This file.
-2. The runtime instruction file for the active agent.
+2. The runtime instruction file for the active agent: AGENTS.md, CLAUDE.md, or .agents/AGENTS.md.
 3. Required documents listed below.
 4. Included profile documents listed below.
 5. Conditional documents when the project type requires them.
@@ -323,9 +324,11 @@ function agentsContent() {
 function claudeContent() {
   return `# CLAUDE.md
 
-## Claude Code Start
+@AGENTS.md
 
-Read START_HERE.md, AGENTS.md, and this file before making changes.
+## Claude Code Adapter
+
+AGENTS.md is the canonical project rule source. This file is a thin Claude Code adapter only.
 
 ## First Response
 
@@ -339,23 +342,59 @@ Report:
 Then start Q1-Q9 intake. Ask one question at a time.`;
 }
 
-function antigravityContent() {
-  return `# ANTIGRAVITY.md
+function antigravityAgentsContent() {
+  return `# Antigravity Managed Agent
 
-## Antigravity Start
+Canonical project rules live in ../AGENTS.md. Read ../START_HERE.md and ../AGENTS.md before using these skills.
 
-Read START_HERE.md, AGENTS.md, and this file before implementing app code.
+## Skills
 
-## First Response
+- bootstrap-intake: start Q1-Q9 intake and document selection.
+- validation-gate: check required docs, open loops, and verification before implementation or handoff.
 
-Report:
-- files read
-- fixed documents present
-- conditional documents likely needed
-- open blockers
-- why implementation cannot start yet
+## Boundary
 
-Then start Q1-Q9 intake. Ask one question at a time.`;
+This adapter must not duplicate the canonical AGENTS.md rules.`;
+}
+
+function bootstrapIntakeSkillContent() {
+  return `---
+name: bootstrap-intake
+description: Start a governance bootstrap by reading START_HERE.md, AGENTS.md, and required docs before code changes.
+---
+
+# Bootstrap Intake
+
+## Trigger
+
+Use when a project is newly initialized or the user asks to start governed agent work.
+
+## Steps
+
+1. Read ../../../START_HERE.md and ../../../AGENTS.md.
+2. Report files read, required documents present, likely conditional documents, and blockers.
+3. Ask Q1-Q9 one question at a time.
+4. Stop before implementation until intake, required docs, TASK_CONTRACT.md, and OPEN_LOOPS.md are confirmed.`;
+}
+
+function validationGateSkillContent() {
+  return `---
+name: validation-gate
+description: Check governance documents and verification state before implementation, release, or handoff.
+---
+
+# Validation Gate
+
+## Trigger
+
+Use before starting implementation, before reporting completion, or before handing work to another agent.
+
+## Steps
+
+1. Check PROJECT_BRIEF.md, SPEC.md, CONTEXT.md, TASK_CONTRACT.md, OPEN_LOOPS.md, AGENTS.md, and TECH_STACK.md.
+2. Confirm conditional documents exist when the project surface requires them.
+3. Run the repo-specific verification command if AGENTS.md defines one.
+4. Report passed checks, blocked checks, and open loops without treating warnings as completion.`;
 }
 
 function runtimeFiles(agent) {
@@ -363,7 +402,9 @@ function runtimeFiles(agent) {
     return [
       ['AGENTS.md', agentsContent()],
       ['CLAUDE.md', claudeContent()],
-      ['ANTIGRAVITY.md', antigravityContent()],
+      ['.agents/AGENTS.md', antigravityAgentsContent()],
+      ['.agents/skills/bootstrap-intake/SKILL.md', bootstrapIntakeSkillContent()],
+      ['.agents/skills/validation-gate/SKILL.md', validationGateSkillContent()],
     ];
   }
 
@@ -382,7 +423,9 @@ function runtimeFiles(agent) {
 
   return [
     ['AGENTS.md', agentsContent()],
-    ['ANTIGRAVITY.md', antigravityContent()],
+    ['.agents/AGENTS.md', antigravityAgentsContent()],
+    ['.agents/skills/bootstrap-intake/SKILL.md', bootstrapIntakeSkillContent()],
+    ['.agents/skills/validation-gate/SKILL.md', validationGateSkillContent()],
   ];
 }
 

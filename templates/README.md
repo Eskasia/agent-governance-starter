@@ -6,7 +6,7 @@
 
 - `fixed/`: every generated project should receive these governance docs.
 - `conditional/`: profile- or project-type-specific docs.
-- `runtime/`: agent entrypoint templates and runtime adapters.
+- `runtime/`: canonical AGENTS template material. Claude and Antigravity adapters must stay thin.
 
 | Template | Required | Trigger | Related workflow |
 |---|---|---|---|
@@ -16,7 +16,7 @@
 | `fixed/TASK_CONTRACT.md` | Yes | Every project | `startup/01-bootstrap-gates.md` |
 | `fixed/OPEN_LOOPS.md` | Yes | Every project | `startup/01-bootstrap-gates.md` |
 | `fixed/TECH_STACK.md` | Yes | Every project | `startup/02-required-project-docs.md` |
-| `runtime/AGENTS.md` | Runtime | Generated runtime entrypoint | `workflows/agent-file-structure.md` |
+| `runtime/AGENTS.md` | Runtime | Generated canonical project entrypoint | `workflows/agent-file-structure.md` |
 | `conditional/UI_SPEC.md` | Conditional | UI, website, app, dashboard, landing page | `workflows/ui-ux.md` |
 | `conditional/DESIGN_SYSTEM.md` | Conditional | Existing screenshots, competitor UI, design tokens | `workflows/design-system-from-screenshots.md` |
 | `conditional/DESIGN_REVIEW.md` | Conditional | UI review, beta, launch, visual QA | `workflows/ui-ux.md` |
