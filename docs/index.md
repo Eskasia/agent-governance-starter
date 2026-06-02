@@ -8,6 +8,7 @@
 | `../startup/00-agent-start-here.md` | Mandatory agent rules and report format |
 | `../startup/01-bootstrap-gates.md` | Q1-Q9 intake and progression gates |
 | `../startup/02-required-project-docs.md` | Required and conditional project docs |
+| `runtime-proof.md` | Mock and real runtime proof commands for generated adapters |
 
 ## Runtime Entrypoints And Adapters
 
@@ -37,6 +38,14 @@
 | AI system design | `../workflows/ai-system-design.md` |
 | Screenshot to design system | `../workflows/design-system-from-screenshots.md` |
 
+## Prompts
+
+| File | Runtime |
+|---|---|
+| `../prompts/codex-new-project.md` | Codex |
+| `../prompts/claude-new-project.md` | Claude Code |
+| `../prompts/antigravity-new-project.md` | Antigravity |
+
 ## Reference
 
 | File | Purpose |
@@ -45,6 +54,7 @@
 | `../VALIDATION.md` | Local and CI validation commands |
 | `../CONTRIBUTING.md` | Contribution rules |
 | `../SECURITY.md` | Security policy |
+| `../CODE_OF_CONDUCT.md` | Contributor behavior expectations |
 | `../ROADMAP.md` | Public release roadmap |
 | `adr/000-template.md` | ADR template |
 | `experiments/context-mode.md` | Experimental context pressure workflow |

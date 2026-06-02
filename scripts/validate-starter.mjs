@@ -154,6 +154,16 @@ function validateProfile(errors, profileFile) {
   }
 }
 
+function packageScripts(errors) {
+  if (!exists('package.json')) return {};
+  try {
+    return readJson('package.json').scripts || {};
+  } catch (error) {
+    fail(errors, `package.json is not valid JSON: ${error.message}`);
+    return {};
+  }
+}
+
 const errors = [];
 
 for (const file of [
@@ -164,12 +174,31 @@ for (const file of [
   'ANTIGRAVITY.md',
   'LICENSE',
   'CONTRIBUTING.md',
+  'CODE_OF_CONDUCT.md',
   'SECURITY.md',
   'ROADMAP.md',
   '.gitignore',
   'VALIDATION.md',
   'docs/index.md',
   'docs/tool-registry.md',
+  'docs/runtime-proof.md',
+  '.github/ISSUE_TEMPLATE/bug_report.yml',
+  '.github/ISSUE_TEMPLATE/feature_request.yml',
+  '.github/ISSUE_TEMPLATE/config.yml',
+  '.github/pull_request_template.md',
+  '.github/release.yml',
+  '.github/workflows/runtime-proof.yml',
+  'tests/runtime/codex/expected-headings.txt',
+  'tests/runtime/claude/first-response.schema.json',
+  'tests/runtime/antigravity/skill-template/SKILL.md',
+  'scripts/smoke-base.mjs',
+  'scripts/smoke-fullstack.mjs',
+  'scripts/fixtures-check.mjs',
+  'scripts/validate-runtime-proof.mjs',
+  'scripts/assert-claude-first-response.mjs',
+  'scripts/runtime-smoke-codex.mjs',
+  'scripts/runtime-smoke-claude.mjs',
+  'scripts/runtime-smoke-antigravity.mjs',
   'profiles/base.json',
   'profiles/fullstack-ai.json',
   'profiles/macos.json',
@@ -179,7 +208,7 @@ for (const file of [
   requireFile(errors, file);
 }
 
-for (const dir of ['startup', 'workflows', 'templates', 'scripts', 'docs', 'prompts', 'profiles', 'schemas', 'examples/template-adoption']) {
+for (const dir of ['startup', 'workflows', 'templates', 'scripts', 'docs', 'prompts', 'profiles', 'schemas', 'examples/template-adoption', 'tests/runtime']) {
   if (!exists(dir)) fail(errors, `Missing directory: ${dir}`);
 }
 
@@ -206,9 +235,15 @@ for (const file of [
 
 requireIncludes(errors, 'README.md', [
   'Agent-native project governance starter for Codex, Claude Code, and Antigravity',
+  'actions/workflows/validate-starter.yml/badge.svg',
+  'License-MIT',
+  'node-%3E%3D20',
   'startup/01-bootstrap-gates.md',
   'startup/02-required-project-docs.md',
   'Generated base project tree',
+  '## Runtime Proof',
+  '## Community',
+  'CODE_OF_CONDUCT.md',
   'README.md',
   'node agent-governance-starter/scripts/doctor.mjs ./my-new-project',
 ]);
@@ -232,10 +267,84 @@ requireIncludes(errors, 'ANTIGRAVITY.md', [
 requireIncludes(errors, 'package.json', [
   '"check"',
   '"validate"',
+  '"validate:runtime-proof"',
   '"smoke:base"',
   '"smoke:fullstack"',
   '"fixtures"',
+  '"runtime:proof"',
+  '"runtime:proof:codex"',
+  '"runtime:proof:claude"',
+  '"runtime:proof:antigravity"',
   '"ci"',
+]);
+
+const scripts = packageScripts(errors);
+for (const [name, command] of Object.entries(scripts)) {
+  if (/\brm\s+-rf\b/.test(command)) fail(errors, `package.json script ${name} uses POSIX-only rm -rf`);
+  if (/\bmkdir\s+-p\b/.test(command)) fail(errors, `package.json script ${name} uses POSIX-only mkdir -p`);
+  if (/\bgrep\b/.test(command)) fail(errors, `package.json script ${name} uses POSIX-only grep`);
+  if (/(^|[\s;&|])diff(\s|$)/.test(command)) fail(errors, `package.json script ${name} uses POSIX-only diff`);
+}
+
+requireIncludes(errors, '.github/ISSUE_TEMPLATE/bug_report.yml', [
+  'problem_type',
+  'reproduction',
+  'expected',
+  'actual',
+  'profile',
+  'agent_runtime',
+  'doctor_output',
+  'validation_commands',
+]);
+
+requireIncludes(errors, '.github/ISSUE_TEMPLATE/feature_request.yml', [
+  'problem_type',
+  'reproduction',
+  'expected',
+  'actual',
+  'profile',
+  'agent_runtime',
+  'doctor_output',
+  'validation_commands',
+]);
+
+requireIncludes(errors, '.github/pull_request_template.md', [
+  '## Summary',
+  '## Changed Surface',
+  '## Validation',
+  '## Generated Fixture Impact',
+  '## Runtime Adapter Impact',
+  '## Docs Updated',
+]);
+
+requireIncludes(errors, '.github/release.yml', [
+  'Features',
+  'Fixes',
+  'Docs',
+  'Maintenance',
+  'Breaking Changes',
+]);
+
+requireIncludes(errors, 'CODE_OF_CONDUCT.md', [
+  'Expected Behavior',
+  'Unacceptable Behavior',
+  'Enforcement',
+]);
+
+requireIncludes(errors, 'docs/index.md', [
+  'runtime-proof.md',
+  'prompts/codex-new-project.md',
+]);
+
+requireIncludes(errors, 'VALIDATION.md', [
+  'npm run runtime:proof',
+  'RUNTIME_PROOF_REAL=1 npm run runtime:proof',
+  'Ubuntu, macOS, and Windows',
+  'npm run fixtures',
+]);
+
+requireIncludes(errors, 'CONTRIBUTING.md', [
+  'npm run runtime:proof',
 ]);
 
 requireIncludes(errors, 'templates/runtime/START_HERE.md', [
@@ -275,6 +384,15 @@ requireIncludes(errors, 'scripts/init.mjs', [
 requireIncludes(errors, 'scripts/doctor.mjs', ['--strict', '--json', 'warnings as failures']);
 requireIncludes(errors, '.github/workflows/validate-starter.yml', [
   'npm run ci',
+  'ubuntu-latest',
+  'macos-latest',
+  'windows-latest',
+]);
+
+requireIncludes(errors, '.github/workflows/runtime-proof.yml', [
+  'workflow_dispatch',
+  'npm run runtime:proof',
+  'RUNTIME_PROOF_REAL',
 ]);
 
 if (exists('scripts/init.mjs')) {
@@ -291,9 +409,31 @@ for (const file of [
   'scripts/init.mjs',
   'scripts/doctor.mjs',
   'scripts/validate-starter.mjs',
+  'scripts/smoke-base.mjs',
+  'scripts/smoke-fullstack.mjs',
+  'scripts/fixtures-check.mjs',
+  'scripts/validate-runtime-proof.mjs',
+  'scripts/assert-claude-first-response.mjs',
+  'scripts/runtime-smoke-codex.mjs',
+  'scripts/runtime-smoke-claude.mjs',
+  'scripts/runtime-smoke-antigravity.mjs',
   '.github/workflows/validate-starter.yml',
+  '.github/workflows/runtime-proof.yml',
 ]) {
   requireRealNewlines(errors, file);
+}
+
+try {
+  JSON.parse(readFile('tests/runtime/claude/first-response.schema.json'));
+} catch (error) {
+  fail(errors, `tests/runtime/claude/first-response.schema.json is not valid JSON: ${error.message}`);
+}
+
+if (exists('tests/runtime/antigravity/skill-template/SKILL.md')) {
+  const skill = readFile('tests/runtime/antigravity/skill-template/SKILL.md');
+  if (!/^name:\s*intake-audit$/m.test(skill) || !/^description:\s*\S+/m.test(skill)) {
+    fail(errors, 'tests/runtime/antigravity/skill-template/SKILL.md frontmatter must include name and description');
+  }
 }
 
 for (const file of templateMarkdownFiles()) {
@@ -400,6 +540,8 @@ function collectMarkdown(dir) {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       if (entry.name === '.git' || entry.name === 'node_modules') continue;
+      const relativeDir = path.relative(root, fullPath);
+      if (relativeDir === path.join('docs', 'research')) continue;
       collectMarkdown(fullPath);
     } else if (entry.isFile() && entry.name.endsWith('.md')) {
       allMarkdown.push(fullPath);
