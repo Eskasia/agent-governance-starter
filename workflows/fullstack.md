@@ -1,4 +1,4 @@
-# 03 Fullstack SaaS Workflow
+# Fullstack SaaS Workflow
 
 適用：Next.js、TypeScript、Tailwind、shadcn/ui、Supabase、OpenAI API、Playwright、Vercel preview 這類全端專案。
 
@@ -27,4 +27,3 @@
 - e2e smoke：Playwright 跑核心流程。
 - preview smoke：Vercel preview + remote env 檢查。
 - performance smoke：核心頁 p95 目標寫入 SPEC。
-

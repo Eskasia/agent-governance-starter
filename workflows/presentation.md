@@ -1,4 +1,4 @@
-# 08 Presentation Workflow
+# Presentation Workflow
 
 適用：簡報、PPT、slide deck、發表頁、產品介紹、客戶提案、研究報告、一頁紙、白皮書、履歷、作品集、landing page。
 

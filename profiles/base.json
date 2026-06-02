@@ -4,6 +4,13 @@
   "description": "Fixed governance documents plus the canonical AGENTS runtime entrypoint.",
   "documents": [
     {
+      "file": "README.md",
+      "template": "runtime/README.md",
+      "category": "runtime",
+      "required": true,
+      "trigger": "Every project"
+    },
+    {
       "file": "PROJECT_BRIEF.md",
       "template": "fixed/PROJECT_BRIEF.md",
       "category": "fixed",

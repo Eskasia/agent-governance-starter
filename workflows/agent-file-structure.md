@@ -1,4 +1,4 @@
-# 09 Agent File Structure Routing
+# Agent File Structure Routing
 
 用途：判斷一個新規則、新經驗、新流程應該寫到哪裡，避免把所有東西塞進 `AGENTS.md` 或聊天紀錄。
 

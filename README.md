@@ -13,9 +13,6 @@ git clone https://github.com/Eskasia/agent-governance-starter.git
 
 node agent-governance-starter/scripts/init.mjs ./my-new-project --agent codex --profile base
 node agent-governance-starter/scripts/doctor.mjs ./my-new-project
-
-# Same doctor command shown explicitly for copy/paste:
-node agent-governance-starter/scripts/doctor.mjs ./my-new-project
 ```
 
 For all supported runtime adapters and the fullstack AI profile:
@@ -24,10 +21,40 @@ For all supported runtime adapters and the fullstack AI profile:
 node agent-governance-starter/scripts/init.mjs ./my-new-project --agent all --profile fullstack-ai
 ```
 
+Generated base project tree:
+
+```text
+my-new-project/
+  README.md
+  START_HERE.md
+  PROJECT_BRIEF.md
+  SPEC.md
+  CONTEXT.md
+  TASK_CONTRACT.md
+  OPEN_LOOPS.md
+  TECH_STACK.md
+  AGENTS.md
+  .agent-governance.json
+```
+
+Expected doctor signal on a fresh project:
+
+```text
+Project doctor: my-new-project
+Profile: base
+Required documents:
+  OK README.md
+  WARN Unfilled template: PROJECT_BRIEF.md
+  WARN Unfilled template: SPEC.md
+```
+
+Fresh templates produce warnings until the project documents are filled.
+
 ## What it generates
 
 | Output | Purpose |
 |---|---|
+| `README.md` | Generated project entrypoint with read order and doctor command |
 | `START_HERE.md` | Read order, Q1-Q9 intake, profile documents, and gate before code |
 | `.agent-governance.json` | Machine-readable profile metadata for `doctor` |
 | `PROJECT_BRIEF.md`, `SPEC.md`, `CONTEXT.md` | Problem, scope, acceptance criteria, and shared language |

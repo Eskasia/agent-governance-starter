@@ -13,6 +13,22 @@ function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
+function readTemplate(templatePath) {
+  const src = path.join(TEMPLATES_DIR, templatePath);
+  if (!fs.existsSync(src)) {
+    throw new Error(`Missing runtime template: templates/${templatePath}`);
+  }
+  return fs.readFileSync(src, 'utf8');
+}
+
+function renderTemplate(templatePath, replacements) {
+  let content = readTemplate(templatePath);
+  for (const [key, value] of Object.entries(replacements)) {
+    content = content.replaceAll(`{{${key}}}`, value);
+  }
+  return content;
+}
+
 function availableProfiles() {
   if (!fs.existsSync(PROFILES_DIR)) return [];
   return fs.readdirSync(PROFILES_DIR)
@@ -216,109 +232,44 @@ function listDocs(docs) {
   return docs.map((doc) => `- ${doc.file}: ${doc.trigger}`).join('\n');
 }
 
+function intakeQuestions() {
+  const source = fs.readFileSync(path.join(STARTER_ROOT, 'startup/01-bootstrap-gates.md'), 'utf8');
+  const match = source.match(/(?:^|\n)## Q1-Q9\s*\n([\s\S]*?)(?=\n## |\s*$)/);
+  if (!match) {
+    throw new Error('startup/01-bootstrap-gates.md missing Q1-Q9 section');
+  }
+  return match[1].trim();
+}
+
 function startHereContent(agent, profile) {
   const requiredDocs = profile.documents.filter((doc) => doc.required);
   const includedDocs = profile.documents.filter((doc) => !doc.required);
   const includedFiles = new Set(profile.documents.map((doc) => doc.file));
   const conditionalHints = profile.conditionalHints.filter((doc) => !includedFiles.has(doc.file));
 
-  return `# START_HERE.md
-
-## Purpose
-
-This project was initialized from agent-governance-starter. The agent must complete intake, project documents, and a task contract before implementation starts.
-
-## Read Order
-
-1. This file.
-2. The runtime instruction file for the active agent: AGENTS.md, CLAUDE.md, or .agents/AGENTS.md.
-3. Required documents listed below.
-4. Included profile documents listed below.
-5. Conditional documents when the project type requires them.
-
-## Runtime
-
-- Initialized agent: ${agent}
-- Init profile: ${profile.name}
-
-## Q1-Q9 Intake
-
-Q1. What user and problem does this solve? One sentence, no "and".
-Q2. What observable behavior means version one succeeded?
-Q3. What outcomes mean the project was done wrong?
-Q4. What is explicitly out of scope for version one? List at least three.
-Q5. Which existing systems, frameworks, APIs, or constraints cannot be changed?
-Q6. Who verifies this and how?
-Q7. Where will this run: local, preview, or production?
-Q8. Which tools or technologies are already decided?
-Q9. Are there hard requirements for performance, scale, privacy, or compliance?
-
-## Required Documents
-
-${listDocs(requiredDocs)}
-
-## Included Profile Documents
-
-${listDocs(includedDocs)}
-
-## Conditional Documents
-
-${listDocs(conditionalHints)}
-
-## Gate
-
-Do not write code until Q1-Q9 are answered, required documents are filled, open loops are explicit, and the user confirms the task plan.`;
+  return renderTemplate('runtime/START_HERE.md', {
+    AGENT: agent,
+    PROFILE_NAME: profile.name,
+    INTAKE_QUESTIONS: intakeQuestions(),
+    REQUIRED_DOCUMENTS: listDocs(requiredDocs),
+    INCLUDED_PROFILE_DOCUMENTS: listDocs(includedDocs),
+    CONDITIONAL_DOCUMENTS: listDocs(conditionalHints),
+  });
 }
 
-function agentsContent() {
-  return `# AGENTS.md
+function readmeContent(agent, profile) {
+  const requiredDocs = profile.documents.filter((doc) => doc.required);
+  const includedDocs = profile.documents.filter((doc) => !doc.required);
+  const includedFiles = new Set(profile.documents.map((doc) => doc.file));
+  const conditionalHints = profile.conditionalHints.filter((doc) => !includedFiles.has(doc.file));
 
-## Project Rules
-
-- Start by reading START_HERE.md.
-- Do not write code before Q1-Q9 intake, required project docs, and TASK_CONTRACT.md are confirmed.
-- Keep every task tied to input, tools, expected output, verification, and explicit non-goals.
-- Do not treat OPEN_LOOPS.md items as decided.
-- Record project-specific commands here after they are verified.
-
-## Required Documents
-
-- PROJECT_BRIEF.md
-- SPEC.md
-- CONTEXT.md
-- TASK_CONTRACT.md
-- OPEN_LOOPS.md
-- TECH_STACK.md
-
-## Commands
-
-| Purpose | Command |
-|---|---|
-| Install |  |
-| Test |  |
-| Lint |  |
-| Build |  |
-| Dev server |  |
-
-## Verification
-
-- Every implementation task must name its verification command or manual check.
-- Final delivery must report which checks passed and which checks remain blocked.
-
-## Do Not
-
-- Do not commit secrets or private tester data.
-- Do not expand scope without updating SPEC.md and TASK_CONTRACT.md.
-- Do not add permanent agent rules before deciding whether they belong in AGENTS.md, docs, skills, hooks, or issue templates.
-
-## File Ownership
-
-- Product and scope: PROJECT_BRIEF.md, SPEC.md
-- Shared language: CONTEXT.md
-- Work execution: TASK_CONTRACT.md
-- Risks and unresolved items: OPEN_LOOPS.md
-- Local agent rules and commands: AGENTS.md
-- Technologies and versions: TECH_STACK.md`;
+  return renderTemplate('runtime/README.md', {
+    AGENT: agent,
+    PROFILE_NAME: profile.name,
+    REQUIRED_DOCUMENTS: listDocs(requiredDocs),
+    INCLUDED_PROFILE_DOCUMENTS: listDocs(includedDocs),
+    CONDITIONAL_DOCUMENTS: listDocs(conditionalHints),
+  });
 }
 
 function claudeContent() {
@@ -397,10 +348,15 @@ Use before starting implementation, before reporting completion, or before handi
 4. Report passed checks, blocked checks, and open loops without treating warnings as completion.`;
 }
 
-function runtimeFiles(agent) {
+function runtimeFiles(agent, profile) {
+  const baseRuntimeFiles = [
+    ['README.md', readmeContent(agent, profile)],
+    ['AGENTS.md', readTemplate('runtime/AGENTS.md')],
+  ];
+
   if (agent === 'all') {
     return [
-      ['AGENTS.md', agentsContent()],
+      ...baseRuntimeFiles,
       ['CLAUDE.md', claudeContent()],
       ['.agents/AGENTS.md', antigravityAgentsContent()],
       ['.agents/skills/bootstrap-intake/SKILL.md', bootstrapIntakeSkillContent()],
@@ -409,20 +365,18 @@ function runtimeFiles(agent) {
   }
 
   if (agent === 'codex') {
-    return [
-      ['AGENTS.md', agentsContent()],
-    ];
+    return baseRuntimeFiles;
   }
 
   if (agent === 'claude') {
     return [
-      ['AGENTS.md', agentsContent()],
+      ...baseRuntimeFiles,
       ['CLAUDE.md', claudeContent()],
     ];
   }
 
   return [
-    ['AGENTS.md', agentsContent()],
+    ...baseRuntimeFiles,
     ['.agents/AGENTS.md', antigravityAgentsContent()],
     ['.agents/skills/bootstrap-intake/SKILL.md', bootstrapIntakeSkillContent()],
     ['.agents/skills/validation-gate/SKILL.md', validationGateSkillContent()],
@@ -469,7 +423,7 @@ for (const doc of templateDocs) {
 writeGenerated('START_HERE.md', targetDir, startHereContent(options.agent, profile), stats);
 writeGenerated(PROJECT_CONFIG_FILE, targetDir, projectConfigContent(options, profile), stats);
 
-for (const [file, content] of runtimeFiles(options.agent)) {
+for (const [file, content] of runtimeFiles(options.agent, profile)) {
   writeGenerated(file, targetDir, content, stats);
 }
 
