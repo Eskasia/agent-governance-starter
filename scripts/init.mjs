@@ -51,7 +51,7 @@ function usage() {
   console.log(`Usage: node scripts/init.mjs <target-directory> [--agent codex|claude|antigravity|all] [--profile base|fullstack-ai|macos|presentation|agent] [--all]`);
   console.log();
   console.log('Defaults: --agent codex --profile base');
-  console.log('--all copies every markdown template except templates/README.md.');
+  console.log('--all copies every fixed and conditional markdown template.');
   console.log();
   console.log('Fixed documents:');
   for (const doc of FIXED_DOCS) console.log(`  - ${doc}`);
@@ -107,8 +107,7 @@ function parseArgs(argv) {
 }
 
 function allTemplateFiles() {
-  return fs.readdirSync(TEMPLATES_DIR)
-    .filter((f) => f.endsWith('.md') && f !== 'README.md')
+  return [...templateIndex().keys()]
     .sort();
 }
 
@@ -116,11 +115,37 @@ function unique(items) {
   return [...new Set(items)];
 }
 
+function collectMarkdownFiles(dir) {
+  if (!fs.existsSync(dir)) return [];
+
+  const files = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...collectMarkdownFiles(fullPath));
+    } else if (entry.isFile() && entry.name.endsWith('.md')) {
+      files.push(fullPath);
+    }
+  }
+  return files;
+}
+
+function templateIndex() {
+  const index = new Map();
+  for (const group of ['fixed', 'conditional']) {
+    const groupDir = path.join(TEMPLATES_DIR, group);
+    for (const filePath of collectMarkdownFiles(groupDir)) {
+      index.set(path.basename(filePath), filePath);
+    }
+  }
+  return index;
+}
+
 function copyTemplate(file, targetDir, stats) {
-  const src = path.join(TEMPLATES_DIR, file);
+  const src = templateIndex().get(file);
   const dest = path.join(targetDir, file);
 
-  if (!fs.existsSync(src)) {
+  if (!src || !fs.existsSync(src)) {
     console.warn(`  WARN Template not found: ${file}`);
     return;
   }

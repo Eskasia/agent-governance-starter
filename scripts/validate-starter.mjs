@@ -90,6 +90,31 @@ function requireRealNewlines(errors, file) {
   }
 }
 
+function collectFiles(relativeDir, predicate) {
+  const absoluteDir = path.join(root, relativeDir);
+  if (!fs.existsSync(absoluteDir)) return [];
+
+  const files = [];
+  for (const entry of fs.readdirSync(absoluteDir, { withFileTypes: true })) {
+    const relativePath = path.join(relativeDir, entry.name);
+    const absolutePath = path.join(root, relativePath);
+    if (entry.isDirectory()) {
+      files.push(...collectFiles(relativePath, predicate));
+    } else if (entry.isFile() && predicate(relativePath, absolutePath)) {
+      files.push(relativePath);
+    }
+  }
+  return files;
+}
+
+function templateMarkdownFiles() {
+  return collectFiles('templates', (relativePath) => relativePath.endsWith('.md'));
+}
+
+function templateExists(doc) {
+  return templateMarkdownFiles().some((file) => path.basename(file) === doc);
+}
+
 const errors = [];
 
 for (const file of [
@@ -178,10 +203,8 @@ for (const file of [
   requireRealNewlines(errors, file);
 }
 
-for (const file of fs.readdirSync(path.join(root, 'templates'))) {
-  if (file.endsWith('.md')) {
-    requireRealNewlines(errors, `templates/${file}`);
-  }
+for (const file of templateMarkdownFiles()) {
+  requireRealNewlines(errors, file);
 }
 
 if (!exists('templates/README.md')) {
@@ -190,7 +213,7 @@ if (!exists('templates/README.md')) {
   const templateReadme = readFile('templates/README.md');
   const templateRefs = markdownRefs(templateReadme).filter((ref) => /^[A-Z0-9_]+\.md$/.test(ref));
   for (const doc of templateRefs) {
-    if (!exists(`templates/${doc}`)) fail(errors, `templates/README.md lists missing template: templates/${doc}`);
+    if (!templateExists(doc)) fail(errors, `templates/README.md lists missing template: ${doc}`);
   }
 }
 

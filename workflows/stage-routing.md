@@ -13,7 +13,7 @@
 
 | 使用者描述 | 立即讀取 | 主要產出 | 停止條件 |
 |---|---|---|---|
-| 我要給測試者、讓人試用、內測包、beta 測試 | `workflows/validation-release.md`、`templates/TESTER_HANDOFF.md`；有 UI 再讀 `workflows/ui-ux.md` | `TESTER_HANDOFF.md`、測試路徑、已知限制、回報格式 | 測試者拿到文件後能自己操作並回報問題 |
+| 我要給測試者、讓人試用、內測包、beta 測試 | `workflows/validation-release.md`、`templates/conditional/TESTER_HANDOFF.md`；有 UI 再讀 `workflows/ui-ux.md` | `TESTER_HANDOFF.md`、測試路徑、已知限制、回報格式 | 測試者拿到文件後能自己操作並回報問題 |
 | 我要上 preview、給別人開連結看 | `workflows/validation-release.md`；有 web/DB 再讀 `workflows/fullstack.md` | preview URL、env 檢查、smoke test 結果 | preview 可開且核心流程可操作 |
 | 我要正式上線、release、發佈 | `workflows/validation-release.md`；依專案類型讀 UI/fullstack/macOS/agent 文件 | release checklist、驗證結果、rollback 或已知限制 | 上線條件與阻塞項清楚 |
 | 我要做 UI 檢查、畫面 polish、給人看畫面 | `workflows/ui-ux.md`、`workflows/validation-release.md` | `DESIGN_REVIEW.md`、desktop/mobile 檢查、console 結果 | 核心畫面、狀態、文字溢出已檢查 |
