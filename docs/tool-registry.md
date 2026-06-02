@@ -50,3 +50,4 @@
 | Its Hover | external CLI | React/shadcn micro-interaction package | CSS transition |
 | repomix | external CLI | 里程碑 review / handoff bundle | manual file list |
 | LLMwiki | private/local | 使用者本機跨專案知識庫 | project docs |
+| gstack-style checklist | external reference | product / architecture / design / review / QA / security / release / retro checklist thinking | `workflows/validation-release.md` |

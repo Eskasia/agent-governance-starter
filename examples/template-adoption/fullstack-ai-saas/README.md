@@ -1,6 +1,6 @@
 # Fullstack AI SaaS Fixture
 
-This fixture demonstrates a filled fullstack AI profile with data, API, environment, RAG, eval, and AI security documents.
+This fixture demonstrates a filled fullstack AI profile with required data, API, environment, and AI security documents, plus scenario-enabled RAG and eval conditional docs.
 
 ## Start Here
 
@@ -24,16 +24,19 @@ This fixture demonstrates a filled fullstack AI profile with data, API, environm
 - OPEN_LOOPS.md: Every project
 - AGENTS.md: Every project
 - TECH_STACK.md: Every project
-
-## Included Profile Documents
-
 - DATA_MODEL.md: Fullstack AI profile
 - API_CONTRACT.md: Fullstack AI profile
 - ENV_CHECKLIST.md: Fullstack AI profile
-- AGENT_RUNTIME.md: Fullstack AI profile
-- RAG_DESIGN.md: Fullstack AI profile
-- EVAL_PLAN.md: Fullstack AI profile
 - AI_SECURITY_REVIEW.md: Fullstack AI profile
+
+## Included Profile Documents
+
+- AGENT_RUNTIME.md: Fullstack AI profile
+
+## Conditional Documents Enabled By This Scenario
+
+- RAG_DESIGN.md: RAG is enabled for document Q&A
+- EVAL_PLAN.md: LLM/RAG output needs regression checks
 
 ## Validation
 

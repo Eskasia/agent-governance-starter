@@ -19,7 +19,7 @@
 | 我要做 UI 檢查、畫面 polish、給人看畫面 | `workflows/ui-ux.md`、`workflows/validation-release.md` | `DESIGN_REVIEW.md`、desktop/mobile 檢查、console 結果 | 核心畫面、狀態、文字溢出已檢查 |
 | 我要先做 prototype、試幾種方向、驗證狀態模型、看看互動順不順 | `workflows/ui-ux.md`、`workflows/validation-release.md` | disposable prototype、UI variants、state-model demo、採用/放棄判斷 | 已選定方向或明確放棄，且不把 prototype 當 production code |
 | 我有 App 截圖，要整理設計規範、生成設計圖、產出 icon 或背景素材 | `workflows/ui-ux.md`、`workflows/design-system-from-screenshots.md` | `DESIGN_SYSTEM.md`、screen map、design tokens、`assets/ASSET_MANIFEST.md` | 規範可追溯截圖、設計圖覆蓋 tabs/彈窗/狀態、素材命名清楚 |
-| 我要做資料庫/API/Auth/權限確認 | `workflows/fullstack.md`、`startup/02-required-project-docs.md` | `DATA_MODEL.md`、`API_CONTRACT.md`、RLS/權限風險 | 資料邊界和驗證方式清楚 |
+| 我要做資料庫/API/Auth/權限確認 | `workflows/fullstack.md`、`startup/02-document-catalog.md` | `DATA_MODEL.md`、`API_CONTRACT.md`、RLS/權限風險 | 資料邊界和驗證方式清楚 |
 | 我要做 agent、自動化、human approval、背景任務 | `workflows/production-agent.md`、`workflows/validation-release.md` | `AGENT_RUNTIME.md`、tool 權限、副作用、approval gate | state、event、tool、verifier 已定義 |
 | 我要打包 macOS app、處理權限、DMG、notarization | `workflows/macos-build-release.md`、`workflows/validation-release.md` | `MACOS_RELEASE_CHECKLIST.md`、簽名/TCC/包裝驗證 | 固定 bundle id、路徑、簽名與驗證結果清楚 |
 | 我要做簡報、PPT、提案、發表頁、一頁紙、白皮書、履歷、作品集、landing page | `workflows/presentation.md` | `PRESENTATION_BRIEF.md`、deck / PDF / HTML 路徑或預覽 URL | 重點、來源、格式、字體與版面符合使用場景 |

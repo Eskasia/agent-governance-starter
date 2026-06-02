@@ -26,6 +26,20 @@ node scripts/doctor.mjs --strict /path/to/your/project
 
 Strict mode treats missing documents and warnings as failures. Normal mode allows placeholder warnings so a freshly initialized project can still be inspected.
 
+## Generated Project Validation
+
+Validates generated projects after `init`: required docs from `profiles/*.json`, runtime adapter files, strict table templates, commands, open loops, and profile-specific docs.
+
+```bash
+node scripts/validate-project.mjs /path/to/generated/project
+```
+
+After smoke generation:
+
+```bash
+npm run validate:project
+```
+
 ## Init Smoke Checks
 
 ```bash
@@ -40,7 +54,7 @@ The starter keeps filled example project packs under `examples/template-adoption
 | Fixture | What it validates | Strict check |
 |---|---|---|
 | `base-minimal` | Fixed docs plus base profile expected doctor JSON | `node scripts/doctor.mjs --strict examples/template-adoption/base-minimal` |
-| `fullstack-ai-saas` | Fixed docs plus RAG, eval, and AI security templates | `node scripts/doctor.mjs --strict examples/template-adoption/fullstack-ai-saas` |
+| `fullstack-ai-saas` | Fixed docs plus required fullstack docs, optional RAG/eval docs, and AI security templates | `node scripts/doctor.mjs --strict examples/template-adoption/fullstack-ai-saas` |
 | `macos-beta-handoff` | Fixed docs plus macOS release and tester handoff templates | `node scripts/doctor.mjs --strict examples/template-adoption/macos-beta-handoff` |
 
 These fixtures are not production projects. They are local adoption proofs that required templates can be filled coherently across different project types.
@@ -63,6 +77,13 @@ The workflow runs on Ubuntu, macOS, and Windows:
 
 ```bash
 npm run ci
+```
+
+Local validation also includes:
+
+```bash
+node scripts/lint-template-tables.mjs
+node scripts/check-antigravity-skills.mjs
 ```
 
 Runtime proof has a separate manual workflow:

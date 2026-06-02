@@ -9,8 +9,9 @@
     "node": ">=20"
   },
   "scripts": {
-    "check": "node --check scripts/init.mjs && node --check scripts/doctor.mjs && node --check scripts/validate-starter.mjs && node --check scripts/smoke-base.mjs && node --check scripts/smoke-fullstack.mjs && node --check scripts/fixtures-check.mjs && node --check scripts/validate-runtime-proof.mjs && node --check scripts/assert-claude-first-response.mjs && node --check scripts/runtime-smoke-codex.mjs && node --check scripts/runtime-smoke-claude.mjs && node --check scripts/runtime-smoke-antigravity.mjs",
-    "validate": "node scripts/validate-starter.mjs .",
+    "check": "node --check scripts/init.mjs && node --check scripts/doctor.mjs && node --check scripts/validate-starter.mjs && node --check scripts/validate-project.mjs && node --check scripts/lint-template-tables.mjs && node --check scripts/check-antigravity-skills.mjs && node --check scripts/smoke-base.mjs && node --check scripts/smoke-fullstack.mjs && node --check scripts/fixtures-check.mjs && node --check scripts/validate-runtime-proof.mjs && node --check scripts/assert-claude-first-response.mjs && node --check scripts/runtime-smoke-codex.mjs && node --check scripts/runtime-smoke-claude.mjs && node --check scripts/runtime-smoke-antigravity.mjs",
+    "validate": "node scripts/validate-starter.mjs . && node scripts/lint-template-tables.mjs && node scripts/check-antigravity-skills.mjs",
+    "validate:project": "node scripts/validate-project.mjs .tmp/base && node scripts/validate-project.mjs .tmp/fullstack",
     "validate:runtime-proof": "node scripts/validate-runtime-proof.mjs .",
     "smoke:base": "node scripts/smoke-base.mjs",
     "smoke:fullstack": "node scripts/smoke-fullstack.mjs",
@@ -19,7 +20,7 @@
     "runtime:proof:claude": "node scripts/runtime-smoke-claude.mjs",
     "runtime:proof:antigravity": "node scripts/runtime-smoke-antigravity.mjs",
     "runtime:proof": "npm run validate:runtime-proof && npm run runtime:proof:codex && npm run runtime:proof:claude && npm run runtime:proof:antigravity",
-    "ci": "npm run check && npm run validate && npm run validate:runtime-proof && npm run smoke:base && npm run smoke:fullstack && npm run fixtures"
+    "ci": "npm run check && npm run validate && npm run validate:runtime-proof && npm run smoke:base && npm run smoke:fullstack && npm run validate:project && npm run fixtures"
   },
   "bin": {
     "agent-governance-init": "./scripts/init.mjs",

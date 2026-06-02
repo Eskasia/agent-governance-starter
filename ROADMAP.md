@@ -6,7 +6,7 @@
 - Maintain `AGENTS.md` as the canonical source of truth.
 - Keep `CLAUDE.md` as a thin adapter.
 - Keep generated Antigravity output under `.agents/AGENTS.md` and `.agents/skills/*/SKILL.md`.
-- Keep top-level `ANTIGRAVITY.md` limited to a legacy compatibility or migration note.
+- Keep Antigravity guidance under `docs/adapters/antigravity.md`; root `ANTIGRAVITY.md` should not return.
 - Keep `scripts/init.mjs`, `scripts/doctor.mjs`, and `scripts/validate-starter.mjs` covered by CI smoke checks.
 - Keep examples filled enough to pass strict doctor checks.
 
@@ -15,6 +15,7 @@
 - Improve generated runtime prompts after real usage shows repeated gaps.
 - Add only stable workflow rules to root files; project-specific rules belong in generated project docs.
 - Keep Antigravity guidance executable without assuming Codex-specific skills.
+- After npm package publication, add and verify `npx agent-governance-starter init ./my-project --agent all --profile fullstack-ai`.
 
 ## Examples Expansion
 

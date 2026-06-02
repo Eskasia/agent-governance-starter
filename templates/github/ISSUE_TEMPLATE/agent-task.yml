@@ -1,0 +1,42 @@
+name: Agent task
+description: Request a governed agent implementation task
+title: "[Agent task]: "
+labels:
+  - agent-task
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should the agent accomplish?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Relevant docs, constraints, links, and known blockers.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Use yes/no checks where possible.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation commands
+      description: Commands or manual checks expected before completion.
+    validations:
+      required: true
+  - type: checkboxes
+    id: gates
+    attributes:
+      label: Governance gates
+      options:
+        - label: Q1-Q9 intake is complete or not needed for this scoped task.
+        - label: Product shape / technology route is documented or unchanged.
+        - label: OPEN_LOOPS.md has no blocker for this task.

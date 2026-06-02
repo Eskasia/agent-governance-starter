@@ -134,7 +134,14 @@ function hasContent(relativePath) {
     return true;
   });
   if (relativePath === 'TASK_CONTRACT.md') {
-    return /任務[:：]\s*(?!<任務名稱>)[^\n]+/.test(content);
+    const taskDetails = content.match(/## 任務詳情\s*\n([\s\S]*?)(?=\n## |\s*$)/);
+    if (!taskDetails) return false;
+    return taskDetails[1].split('\n').some((line) => {
+      const cells = line.split('|').slice(1, -1).map((cell) => cell.trim());
+      if (cells.length === 0) return false;
+      const taskName = cells[0] || '';
+      return taskName && taskName !== '任務名稱' && taskName !== '<任務名稱>' && !/^[-]+$/.test(taskName);
+    });
   }
 
   if (relativePath === 'OPEN_LOOPS.md') {
@@ -145,11 +152,13 @@ function hasContent(relativePath) {
 }
 
 function hasRouteMode(content) {
-  return /^-\s*決策模式[：:]\s*(user-declared route|ai-recommended route)\s*$/im.test(content);
+  return /^-\s*決策模式[：:]\s*(user-declared route|ai-recommended route)\s*$/im.test(content)
+    || /^\|\s*決策模式\s*\|\s*(user-declared route|ai-recommended route)\s*\|/im.test(content);
 }
 
 function hasFilledLine(content, label) {
-  return new RegExp(`^-\\s*${label}[：:]\\s*\\S.+$`, 'im').test(content);
+  return new RegExp(`^-\\s*${label}[：:]\\s*\\S.+$`, 'im').test(content)
+    || new RegExp(`^\\|\\s*${label}\\s*\\|\\s*\\S[^|]*\\|`, 'im').test(content);
 }
 
 function hasProductShapeDecision() {

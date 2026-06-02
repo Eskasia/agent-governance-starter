@@ -24,8 +24,12 @@
 
 ## Existing constraints
 
-- App must be launched from fixed path.
+| Constraint | Source | Impact | Owner |
+|---|---|---|---|
+| App must be launched from fixed path | MACOS_RELEASE_CHECKLIST | TCC prompts stay comparable | developer |
 
 ## Decisions already made
 
-- Use beta handoff before production release.
+| Decision | Source | Date | Revisit condition |
+|---|---|---|---|
+| Use beta handoff before production release | PROJECT_BRIEF | 2026-06-02 | production signing path changes |

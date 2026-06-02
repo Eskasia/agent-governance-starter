@@ -166,12 +166,23 @@ function packageScripts(errors) {
 
 const errors = [];
 
+if (exists('ANTIGRAVITY.md')) {
+  fail(errors, 'Root ANTIGRAVITY.md should not exist; use docs/adapters/antigravity.md');
+}
+
+if (exists('CODEX.md')) {
+  fail(errors, 'Root CODEX.md should not exist; Codex uses AGENTS.md');
+}
+
+if (exists('docs/adr/000-template.md')) {
+  fail(errors, 'ADR templates belong under templates/docs/adr, not docs/adr');
+}
+
 for (const file of [
   'README.md',
   'package.json',
   'AGENTS.md',
   'CLAUDE.md',
-  'ANTIGRAVITY.md',
   'LICENSE',
   'CONTRIBUTING.md',
   'CODE_OF_CONDUCT.md',
@@ -180,8 +191,13 @@ for (const file of [
   '.gitignore',
   'VALIDATION.md',
   'docs/index.md',
+  'docs/governance-model.md',
   'docs/tool-registry.md',
   'docs/runtime-proof.md',
+  'docs/adapters/codex.md',
+  'docs/adapters/claude-code.md',
+  'docs/adapters/antigravity.md',
+  'docs/adr/0001-governance-model.md',
   '.github/ISSUE_TEMPLATE/bug_report.yml',
   '.github/ISSUE_TEMPLATE/feature_request.yml',
   '.github/ISSUE_TEMPLATE/config.yml',
@@ -191,6 +207,9 @@ for (const file of [
   'tests/runtime/codex/expected-headings.txt',
   'tests/runtime/claude/first-response.schema.json',
   'tests/runtime/antigravity/skill-template/SKILL.md',
+  'scripts/validate-project.mjs',
+  'scripts/lint-template-tables.mjs',
+  'scripts/check-antigravity-skills.mjs',
   'scripts/smoke-base.mjs',
   'scripts/smoke-fullstack.mjs',
   'scripts/fixtures-check.mjs',
@@ -202,20 +221,43 @@ for (const file of [
   'profiles/base.json',
   'profiles/fullstack-ai.json',
   'profiles/macos.json',
-  'schemas/project-doc.schema.json',
+  'schemas/profile.schema.json',
+  'schemas/project-config.schema.json',
   'schemas/doctor-output.schema.json',
+  'schemas/task-contract.schema.json',
+  'prompts/README.md',
+  'examples/transcripts/codex-first-run.md',
+  'examples/transcripts/claude-first-run.md',
+  'examples/transcripts/antigravity-first-run.md',
+  'examples/generated/base/START_HERE.md',
+  'examples/generated/base/AGENTS.md',
+  'examples/generated/base/.agent-governance.json',
+  'examples/generated/fullstack-ai/START_HERE.md',
+  'examples/generated/fullstack-ai/AGENTS.md',
+  'examples/generated/fullstack-ai/CLAUDE.md',
+  'examples/generated/fullstack-ai/.agents/AGENTS.md',
+  'examples/generated/fullstack-ai/.agents/skills/implementation-plan/SKILL.md',
+  'templates/runtime/CLAUDE.md',
+  'templates/runtime/antigravity/AGENTS.md',
+  'templates/runtime/antigravity/skills/bootstrap-intake/SKILL.md',
+  'templates/runtime/antigravity/skills/validation-gate/SKILL.md',
+  'templates/runtime/antigravity/skills/implementation-plan/SKILL.md',
+  'templates/runtime/antigravity/skills/release-handoff/SKILL.md',
+  'templates/docs/adr/0001-template.md',
+  'templates/github/ISSUE_TEMPLATE/agent-task.yml',
+  'templates/github/pull_request_template.md',
 ]) {
   requireFile(errors, file);
 }
 
-for (const dir of ['startup', 'workflows', 'templates', 'scripts', 'docs', 'prompts', 'profiles', 'schemas', 'examples/template-adoption', 'tests/runtime']) {
+for (const dir of ['startup', 'workflows', 'templates', 'scripts', 'docs', 'docs/adapters', 'prompts', 'profiles', 'schemas', 'examples/template-adoption', 'examples/generated', 'examples/transcripts', 'tests/runtime']) {
   if (!exists(dir)) fail(errors, `Missing directory: ${dir}`);
 }
 
 for (const file of [
-  'startup/00-agent-start-here.md',
+  'startup/00-source-agent-start-here.md',
   'startup/01-bootstrap-gates.md',
-  'startup/02-required-project-docs.md',
+  'startup/02-document-catalog.md',
   'workflows/product-shape-tech-route.md',
   'workflows/skill-and-plugin-adoption.md',
 ]) {
@@ -245,9 +287,13 @@ requireIncludes(errors, 'README.md', [
   'License-MIT',
   'node-%3E%3D20',
   'startup/01-bootstrap-gates.md',
-  'startup/02-required-project-docs.md',
+  'startup/02-document-catalog.md',
   'workflows/product-shape-tech-route.md',
   'workflows/skill-and-plugin-adoption.md',
+  'Good fit',
+  'Not a fit',
+  'init -> fill docs -> doctor -> agent plan -> implementation -> validation -> handoff',
+  'Doctor pass/fail standard',
   'Generated base project tree',
   '## Runtime Proof',
   '## Community',
@@ -257,8 +303,16 @@ requireIncludes(errors, 'README.md', [
   'product shape / technology route',
 ]);
 
-requireIncludes(errors, 'startup/00-agent-start-here.md', [
+requireIncludes(errors, 'startup/00-source-agent-start-here.md', [
   'workflows/skill-and-plugin-adoption.md',
+]);
+
+requireIncludes(errors, 'startup/02-document-catalog.md', [
+  'profiles/*.json',
+  'Profile Manifest Contract',
+  'fullstack-ai',
+  'RAG_DESIGN.md',
+  'EVAL_PLAN.md',
 ]);
 
 requireIncludes(errors, 'startup/01-bootstrap-gates.md', [
@@ -318,8 +372,20 @@ requireIncludes(errors, 'CLAUDE.md', [
   'thin Claude Code adapter',
 ]);
 
-requireIncludes(errors, 'ANTIGRAVITY.md', [
-  'not the official Antigravity runtime entrypoint',
+requireIncludes(errors, 'docs/adapters/codex.md', [
+  'AGENTS.md',
+  'CODEX.md',
+  'Not used',
+]);
+
+requireIncludes(errors, 'docs/adapters/claude-code.md', [
+  'CLAUDE.md',
+  'AGENTS.md',
+  'thin adapter',
+]);
+
+requireIncludes(errors, 'docs/adapters/antigravity.md', [
+  'Antigravity',
   '.agents/AGENTS.md',
   '.agents/skills/*/SKILL.md',
 ]);
@@ -327,6 +393,7 @@ requireIncludes(errors, 'ANTIGRAVITY.md', [
 requireIncludes(errors, 'package.json', [
   '"check"',
   '"validate"',
+  '"validate:project"',
   '"validate:runtime-proof"',
   '"smoke:base"',
   '"smoke:fullstack"',
@@ -393,8 +460,12 @@ requireIncludes(errors, 'CODE_OF_CONDUCT.md', [
 
 requireIncludes(errors, 'docs/index.md', [
   'runtime-proof.md',
+  'governance-model.md',
   'prompts/codex-new-project.md',
   'workflows/skill-and-plugin-adoption.md',
+  'adapters/codex.md',
+  'adapters/claude-code.md',
+  'adapters/antigravity.md',
 ]);
 
 requireIncludes(errors, 'docs/tool-registry.md', [
@@ -432,6 +503,11 @@ requireIncludes(errors, 'templates/runtime/README.md', [
   'product shape / technology route gate',
 ]);
 
+requireIncludes(errors, 'templates/runtime/CLAUDE.md', [
+  '@AGENTS.md',
+  'Claude Code Adapter',
+]);
+
 requireIncludes(errors, 'templates/runtime/AGENTS.md', [
   'product shape / technology route gate',
   'user-declared route',
@@ -441,6 +517,13 @@ requireIncludes(errors, 'templates/runtime/AGENTS.md', [
   'Make surgical edits',
   'TECH_STACK.md',
   'adoption gate',
+]);
+
+requireIncludes(errors, 'templates/runtime/antigravity/AGENTS.md', [
+  'bootstrap-intake',
+  'validation-gate',
+  'implementation-plan',
+  'release-handoff',
 ]);
 
 requireIncludes(errors, 'templates/fixed/PROJECT_BRIEF.md', [
@@ -455,16 +538,20 @@ requireIncludes(errors, 'templates/fixed/TECH_STACK.md', [
   '決策模式',
   '唯一主路線',
   '新技術引入 gate',
+  'ENV_CHECKLIST.md',
   '| Frontend |',
   '| Backend |',
   '| Database |',
   '| Main framework / SDK |',
 ]);
 
-requireIncludes(errors, 'docs/adr/000-template.md', [
+requireIncludes(errors, 'templates/fixed/TASK_CONTRACT.md', [
+  '| 任務名稱 | 輸入 | 可用工具 | 預期輸出 | 驗證方式 | 不做事項 | 完成標準 | 風險 / 阻塞 |',
+]);
+
+requireIncludes(errors, 'templates/docs/adr/0001-template.md', [
   '## Reevaluation Triggers',
-  '## Switching Cost',
-  '## Adoption Gate',
+  '## Consequences',
 ]);
 
 for (const file of [
@@ -486,15 +573,30 @@ requireIncludes(errors, 'scripts/doctor.mjs', [
 ]);
 
 requireIncludes(errors, 'scripts/init.mjs', [
-  'product shape / technology route mode',
-  'user-declared route',
-  'ai-recommended route',
+  'runtime/CLAUDE.md',
+  'runtime/antigravity/skills/implementation-plan/SKILL.md',
 ]);
 
-for (const file of ['README.md', 'CLAUDE.md', 'ANTIGRAVITY.md']) {
+requireIncludes(errors, 'scripts/validate-project.mjs', [
+  'Missing required document',
+  'Missing adapter file',
+  'fullstack-ai profile requires',
+]);
+
+requireIncludes(errors, 'scripts/lint-template-tables.mjs', [
+  'templates/fixed/TASK_CONTRACT.md',
+  'must be a markdown pipe-table row',
+]);
+
+requireIncludes(errors, 'scripts/check-antigravity-skills.mjs', [
+  'implementation-plan',
+  'release-handoff',
+]);
+
+for (const file of ['README.md', 'CLAUDE.md']) {
   if (exists(file)) {
     const content = readFile(file);
-    if (content.includes('then 01-bootstrap-gates.md') || content.includes('then 02-required-project-docs.md')) {
+    if (content.includes('then 01-bootstrap-gates.md') || content.includes('then 02-document-catalog.md')) {
       fail(errors, `${file} has ambiguous startup path in first-message text`);
     }
   }
@@ -507,9 +609,11 @@ requireIncludes(errors, 'scripts/init.mjs', [
   'runtime/AGENTS.md',
   'runtime/START_HERE.md',
   'runtime/README.md',
+  'runtime/CLAUDE.md',
   'startup/01-bootstrap-gates.md',
   '.agents/AGENTS.md',
   '.agents/skills/bootstrap-intake/SKILL.md',
+  '.agents/skills/implementation-plan/SKILL.md',
 ]);
 requireIncludes(errors, 'scripts/doctor.mjs', ['--strict', '--json', 'warnings as failures']);
 requireIncludes(errors, '.github/workflows/validate-starter.yml', [
@@ -539,6 +643,9 @@ for (const file of [
   'scripts/init.mjs',
   'scripts/doctor.mjs',
   'scripts/validate-starter.mjs',
+  'scripts/validate-project.mjs',
+  'scripts/lint-template-tables.mjs',
+  'scripts/check-antigravity-skills.mjs',
   'scripts/smoke-base.mjs',
   'scripts/smoke-fullstack.mjs',
   'scripts/fixtures-check.mjs',

@@ -11,7 +11,7 @@
 5. 計畫：5-10 步，每步有驗證
 6. 實作：一次只做一個步驟
 7. 驗證：測試、Browser/Chrome、Playwright、DB、部署檢查
-8. 收尾：handoff、neat-freak、repomix、LLMwiki、文件結構分流、gstack-style checklist
+8. 收尾：文件結構分流、驗證交接、release/handoff checklist；具體工具名與 fallback 見 `docs/tool-registry.md`
 
 ## Q1-Q9
 

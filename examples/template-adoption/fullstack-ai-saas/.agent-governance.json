@@ -11,7 +11,11 @@
     "TASK_CONTRACT.md",
     "OPEN_LOOPS.md",
     "AGENTS.md",
-    "TECH_STACK.md"
+    "TECH_STACK.md",
+    "DATA_MODEL.md",
+    "API_CONTRACT.md",
+    "ENV_CHECKLIST.md",
+    "AI_SECURITY_REVIEW.md"
   ],
   "includedDocuments": [
     "README.md",

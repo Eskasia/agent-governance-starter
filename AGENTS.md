@@ -9,9 +9,9 @@ AGENTS.md is the canonical source of truth for repository rules. Claude and Anti
 ## Required Read Order
 
 1. `README.md` for positioning and public usage.
-2. `startup/00-agent-start-here.md` for mandatory agent behavior.
+2. `startup/00-source-agent-start-here.md` for mandatory source-agent behavior.
 3. `startup/01-bootstrap-gates.md` for Q1-Q9 intake gates.
-4. `startup/02-required-project-docs.md` for fixed and conditional output docs.
+4. `startup/02-document-catalog.md` for profile-derived document catalog rules.
 5. Relevant files in `workflows/` only when the task touches that area.
 
 ## Commands
@@ -32,7 +32,7 @@ AGENTS.md is the canonical source of truth for repository rules. Claude and Anti
 - Keep public positioning conservative: this is a governance starter, not proof of external adoption.
 - Do not add root numbered workflow files. Workflow docs live under `startup/` or `workflows/`.
 - Do not add a root `codex_mvp_prd_pack.md`; PRD/MVP material belongs in templates or workflow docs.
-- When adding a template, update `templates/README.md`, `startup/02-required-project-docs.md` if needed, and `scripts/validate-starter.mjs` if the template becomes required.
+- When adding a template, update `profiles/*.json`, `templates/README.md`, `startup/02-document-catalog.md` if needed, and `scripts/validate-starter.mjs` if the template becomes required.
 - When adding a runtime adapter, keep AGENTS.md canonical and update `README.md`, `scripts/init.mjs`, and `scripts/validate-starter.mjs`.
 
 ## Coding Discipline

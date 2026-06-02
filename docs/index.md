@@ -5,9 +5,9 @@
 | File | Purpose |
 |---|---|
 | `../README.md` | Public positioning, quick start, file map |
-| `../startup/00-agent-start-here.md` | Mandatory agent rules and report format |
+| `../startup/00-source-agent-start-here.md` | Source-agent rules and report format |
 | `../startup/01-bootstrap-gates.md` | Q1-Q9 intake and progression gates |
-| `../startup/02-required-project-docs.md` | Required and conditional project docs |
+| `../startup/02-document-catalog.md` | Profile-derived document catalog |
 | `runtime-proof.md` | Mock and real runtime proof commands for generated adapters |
 
 ## Runtime Entrypoints And Adapters
@@ -18,7 +18,9 @@
 | `../CLAUDE.md` | Claude Code thin adapter |
 | `.agents/AGENTS.md` | Generated Antigravity adapter in initialized projects |
 | `.agents/skills/*/SKILL.md` | Generated Antigravity skills in initialized projects |
-| `../ANTIGRAVITY.md` | Legacy compatibility or migration note only |
+| `adapters/codex.md` | Codex adapter notes |
+| `adapters/claude-code.md` | Claude Code adapter notes |
+| `adapters/antigravity.md` | Antigravity adapter notes |
 
 ## Workflow Docs
 
@@ -47,6 +49,18 @@
 | `../prompts/codex-new-project.md` | Codex |
 | `../prompts/claude-new-project.md` | Claude Code |
 | `../prompts/antigravity-new-project.md` | Antigravity |
+| `../prompts/README.md` | Prompt usage map |
+
+## Examples
+
+| File | Purpose |
+|---|---|
+| `../examples/template-adoption/` | Filled profile adoption fixtures |
+| `../examples/generated/base/` | Generated base project example |
+| `../examples/generated/fullstack-ai/` | Generated fullstack AI project example |
+| `../examples/transcripts/codex-first-run.md` | Codex first response example |
+| `../examples/transcripts/claude-first-run.md` | Claude Code first response example |
+| `../examples/transcripts/antigravity-first-run.md` | Antigravity first response example |
 
 ## Reference
 
@@ -58,5 +72,7 @@
 | `../SECURITY.md` | Security policy |
 | `../CODE_OF_CONDUCT.md` | Contributor behavior expectations |
 | `../ROADMAP.md` | Public release roadmap |
-| `adr/000-template.md` | ADR template |
+| `governance-model.md` | Governance layer model |
+| `adr/0001-governance-model.md` | Accepted governance model ADR |
+| `../templates/docs/adr/0001-template.md` | ADR template for generated projects |
 | `experiments/context-mode.md` | Experimental context pressure workflow |
