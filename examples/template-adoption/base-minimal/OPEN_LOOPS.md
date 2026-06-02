@@ -1,11 +1,13 @@
 # OPEN_LOOPS.md
 
-| Status | Item | Owner | Next Check |
-|---|---|---|---|
-| closed | Base fixture scope is fixed to governance docs only | maintainer | expected doctor JSON |
-| closed | Runtime framework work is out of scope | maintainer | README boundary |
+| Status | Blocker | Question / Risk | Impact | Owner | Next Step | Due |
+|---|---|---|---|---|---|---|
+| closed | scope-blocked | Base fixture scope is fixed to governance docs only | low | maintainer | expected doctor JSON updated | before release |
+| closed | architecture-blocked | Runtime framework work is out of scope | low | maintainer | README boundary documented | before release |
 
 ## Notes
 
-- No unresolved decisions are required for this fixture.
-- Future profile changes should update this fixture and expected JSON in the same commit.
+| Note | Detail |
+|---|---|
+| No unresolved decisions | This fixture has no open blocker |
+| Profile drift rule | Future profile changes should update this fixture and expected JSON in the same commit |

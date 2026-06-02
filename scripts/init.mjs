@@ -272,82 +272,6 @@ function readmeContent(agent, profile) {
   });
 }
 
-function claudeContent() {
-  return `# CLAUDE.md
-
-@AGENTS.md
-
-## Claude Code Adapter
-
-AGENTS.md is the canonical project rule source. This file is a thin Claude Code adapter only.
-
-## First Response
-
-Report:
-- files read
-- fixed documents present
-- conditional documents likely needed
-- open blockers
-- why code cannot start yet
-
-Then start Q1-Q9 intake. Ask one question at a time.`;
-}
-
-function antigravityAgentsContent() {
-  return `# Antigravity Managed Agent
-
-Canonical project rules live in ../AGENTS.md. Read ../START_HERE.md and ../AGENTS.md before using these skills.
-
-## Skills
-
-- bootstrap-intake: start Q1-Q9 intake and document selection.
-- validation-gate: check required docs, open loops, and verification before implementation or handoff.
-
-## Boundary
-
-This adapter must not duplicate the canonical AGENTS.md rules.`;
-}
-
-function bootstrapIntakeSkillContent() {
-  return `---
-name: bootstrap-intake
-description: Start a governance bootstrap by reading START_HERE.md, AGENTS.md, and required docs before code changes.
----
-
-# Bootstrap Intake
-
-## Trigger
-
-Use when a project is newly initialized or the user asks to start governed agent work.
-
-## Steps
-
-1. Read ../../../START_HERE.md and ../../../AGENTS.md.
-2. Report files read, required documents present, likely conditional documents, and blockers.
-3. Ask Q1-Q9 one question at a time.
-4. Stop before implementation until intake, required docs, TASK_CONTRACT.md, and OPEN_LOOPS.md are confirmed.`;
-}
-
-function validationGateSkillContent() {
-  return `---
-name: validation-gate
-description: Check governance documents and verification state before implementation, release, or handoff.
----
-
-# Validation Gate
-
-## Trigger
-
-Use before starting implementation, before reporting completion, or before handing work to another agent.
-
-## Steps
-
-1. Check PROJECT_BRIEF.md, SPEC.md, CONTEXT.md, TASK_CONTRACT.md, OPEN_LOOPS.md, AGENTS.md, and TECH_STACK.md.
-2. Confirm conditional documents exist when the project surface requires them.
-3. Run the repo-specific verification command if AGENTS.md defines one.
-4. Report passed checks, blocked checks, and open loops without treating warnings as completion.`;
-}
-
 function runtimeFiles(agent, profile) {
   const baseRuntimeFiles = [
     ['README.md', readmeContent(agent, profile)],
@@ -357,10 +281,12 @@ function runtimeFiles(agent, profile) {
   if (agent === 'all') {
     return [
       ...baseRuntimeFiles,
-      ['CLAUDE.md', claudeContent()],
-      ['.agents/AGENTS.md', antigravityAgentsContent()],
-      ['.agents/skills/bootstrap-intake/SKILL.md', bootstrapIntakeSkillContent()],
-      ['.agents/skills/validation-gate/SKILL.md', validationGateSkillContent()],
+      ['CLAUDE.md', readTemplate('runtime/CLAUDE.md')],
+      ['.agents/AGENTS.md', readTemplate('runtime/antigravity/AGENTS.md')],
+      ['.agents/skills/bootstrap-intake/SKILL.md', readTemplate('runtime/antigravity/skills/bootstrap-intake/SKILL.md')],
+      ['.agents/skills/validation-gate/SKILL.md', readTemplate('runtime/antigravity/skills/validation-gate/SKILL.md')],
+      ['.agents/skills/implementation-plan/SKILL.md', readTemplate('runtime/antigravity/skills/implementation-plan/SKILL.md')],
+      ['.agents/skills/release-handoff/SKILL.md', readTemplate('runtime/antigravity/skills/release-handoff/SKILL.md')],
     ];
   }
 
@@ -371,15 +297,17 @@ function runtimeFiles(agent, profile) {
   if (agent === 'claude') {
     return [
       ...baseRuntimeFiles,
-      ['CLAUDE.md', claudeContent()],
+      ['CLAUDE.md', readTemplate('runtime/CLAUDE.md')],
     ];
   }
 
   return [
     ...baseRuntimeFiles,
-    ['.agents/AGENTS.md', antigravityAgentsContent()],
-    ['.agents/skills/bootstrap-intake/SKILL.md', bootstrapIntakeSkillContent()],
-    ['.agents/skills/validation-gate/SKILL.md', validationGateSkillContent()],
+    ['.agents/AGENTS.md', readTemplate('runtime/antigravity/AGENTS.md')],
+    ['.agents/skills/bootstrap-intake/SKILL.md', readTemplate('runtime/antigravity/skills/bootstrap-intake/SKILL.md')],
+    ['.agents/skills/validation-gate/SKILL.md', readTemplate('runtime/antigravity/skills/validation-gate/SKILL.md')],
+    ['.agents/skills/implementation-plan/SKILL.md', readTemplate('runtime/antigravity/skills/implementation-plan/SKILL.md')],
+    ['.agents/skills/release-handoff/SKILL.md', readTemplate('runtime/antigravity/skills/release-handoff/SKILL.md')],
   ];
 }
 
@@ -431,6 +359,7 @@ console.log();
 console.log(`Done. Copied ${stats.copied} template file(s), generated ${stats.generated} file(s), skipped ${stats.skipped} existing file(s).`);
 console.log();
 console.log('Next steps:');
-console.log('  1. Fill PROJECT_BRIEF.md with the one-line project direction and target user.');
-console.log('  2. Ask the agent to read START_HERE.md and its runtime instruction file.');
-console.log('  3. Run: node agent-governance-starter/scripts/doctor.mjs <target-directory>');
+console.log('  1. Fill PROJECT_BRIEF.md with the one-line project direction, target user, and product shape decision.');
+console.log('  2. Fill TECH_STACK.md with the user-declared or AI-recommended technology route.');
+console.log('  3. Ask the agent to read START_HERE.md and its runtime instruction file.');
+console.log('  4. Run: node agent-governance-starter/scripts/doctor.mjs <target-directory>');

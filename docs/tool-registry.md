@@ -23,9 +23,11 @@
 | `workflows/macos-build-release.md` | repo doc | macOS build、簽名、TCC、notarization | 專案內 build script |
 | `workflows/presentation.md` | repo doc | slide deck、一頁紙、簡報 artifact | Markdown / HTML slides |
 | `workflows/production-agent.md` | repo doc | production-facing LLM agent、tool use | `AGENT_RUNTIME.md` |
+| `workflows/skill-and-plugin-adoption.md` | repo doc | 外部 repo、skill、plugin、agent pack 採用 gate | `TECH_STACK.md` / ADR / `OPEN_LOOPS.md` |
 | `workflows/ui-ux.md` | repo doc | UI spec、review、polish routing | `UI_SPEC.md` |
 | `docs/experiments/context-mode.md` | experimental | context 壓力緩解實驗 | handoff note |
 | CodeGraph | builtin/runtime | 已有 `.codegraph/` 時查 symbol、call graph、impact | `rg`、讀檔、測試 |
+| Understand-Anything | external skill | 大型陌生 repo / knowledge graph onboarding | `zoom-out` + local notes |
 | Playwright | builtin/runtime | 本機或 preview web UI 自動化測試 | Browser / Chrome manual QA |
 | image generation skill | builtin/runtime | 產生參考圖或素材 | image search / 手動素材 |
 | `grill-with-docs` | external skill | 需求問診與 shared language | `PROJECT_BRIEF.md` / `SPEC.md` |
@@ -41,10 +43,11 @@
 | `vercel-deploy` | external skill | Vercel deployment workflow | Vercel CLI / dashboard |
 | `pdf` | external skill | PDF 讀寫與版面檢查 | local PDF library |
 | `kami` | external skill | 一頁紙、白皮書、履歷、作品集 | Markdown / HTML artifact |
-| `skill-creator` / `skill-installer` | external skill | 建立或安裝 skills | manual docs / scripts |
+| `skill-creator` / `skill-installer` / `find-skills` | external skill | 建立、安裝或搜尋可重複 skills | manual docs / scripts |
 | `to-prd` / `to-issues` / `triage` | external skill | PRD、issue、triage | `TASK_CONTRACT.md` |
 | `audit-prep-assistant` / `semgrep` / `codeql` | external skill | 安全審查、靜態分析、依賴風險 | threat checklist / package audit |
 | RTK | external CLI | 壓縮大型 shell 輸出 | 原生命令加範圍限制 |
 | Its Hover | external CLI | React/shadcn micro-interaction package | CSS transition |
 | repomix | external CLI | 里程碑 review / handoff bundle | manual file list |
 | LLMwiki | private/local | 使用者本機跨專案知識庫 | project docs |
+| gstack-style checklist | external reference | product / architecture / design / review / QA / security / release / retro checklist thinking | `workflows/validation-release.md` |

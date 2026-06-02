@@ -5,7 +5,7 @@
 1. Fork the repository.
 2. Create a feature branch: `git checkout -b feat/your-feature`.
 3. Make focused changes following the conventions below.
-4. Run validation: `node scripts/validate-starter.mjs .`.
+4. Run validation: `npm run ci`.
 5. Submit a pull request with the validation output.
 
 ## Adding a Workflow Doc
@@ -19,8 +19,8 @@
 
 - Place the file in `templates/` with an UPPER_SNAKE_CASE `.md` name.
 - Add the template to `templates/README.md`.
-- Reference it in `startup/02-required-project-docs.md` under fixed or conditional documents.
-- Add it to the relevant `scripts/init.mjs` profile if it should be copied automatically.
+- Reference it in `profiles/*.json` first, then keep `startup/02-document-catalog.md` and `templates/README.md` in sync.
+- Add it to the relevant `profiles/*.json` manifest if it should be copied automatically.
 - Ensure the template has meaningful structure: tables, field labels, and completion criteria, not just empty placeholders.
 
 ## Adding a Runtime Entrypoint
@@ -29,11 +29,12 @@
 - Add the generated-project version in `scripts/init.mjs`.
 - Add a direct prompt under `prompts/` if users should be able to paste it into the runtime.
 - Update `README.md`, `docs/index.md`, `VALIDATION.md`, and `scripts/validate-starter.mjs`.
+- Run `npm run runtime:proof` when changing runtime adapters, runtime templates, profiles, or first-response expectations.
 
 ## Adding an Example Fixture
 
 - Create a subdirectory under `examples/template-adoption/`.
-- Include all 7 fixed documents with realistic filled content.
+- Include all required profile documents with realistic filled content.
 - Include the conditional documents required by that project type.
 - Ensure `node scripts/doctor.mjs --strict <fixture>` passes.
 - Add a note in `examples/template-adoption/README.md`.

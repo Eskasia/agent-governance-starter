@@ -8,18 +8,20 @@
 
 ## 任務詳情
 
-### 任務：建立 base fixture
+| 任務名稱 | 輸入 | 可用工具 | 預期輸出 | 驗證方式 | 不做事項 | 完成標準 | 風險 / 阻塞 |
+|---|---|---|---|---|---|---|---|
+| 建立 base fixture | base profile and fixed templates | scripts/init.mjs, scripts/doctor.mjs | filled base-minimal fixture | compare doctor JSON with expected output | do not add app code | fixture status is ready | profile changes require expected JSON update |
 
-- 輸入：base profile and fixed templates
-- 可用工具：scripts/init.mjs, scripts/doctor.mjs
-- 預期輸出：filled base-minimal fixture
-- 驗證方式：compare doctor JSON with expected output
-- 不做事項：do not add app code
-- 完成標準：fixture status is ready
-- 風險 / 阻塞：profile changes require expected JSON update
+## 依賴關係
+
+| From | To | Reason | Status |
+|---|---|---|---|
+| base profile | base fixture | fixture mirrors profile documents | complete |
 
 ## 驗收總結
 
-- [x] 所有任務驗證方式已執行
-- [x] 無未記錄的範圍外修改
-- [x] OPEN_LOOPS.md 已更新
+| Check | Status | Evidence |
+|---|---|---|
+| 所有任務驗證方式已執行 | complete | expected doctor JSON |
+| 無未記錄的範圍外修改 | complete | fixture scope |
+| OPEN_LOOPS.md 已更新 | complete | closed rows only |

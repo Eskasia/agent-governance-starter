@@ -24,8 +24,12 @@
 
 ## Existing constraints
 
-- Tenant permission filter must happen before retrieval.
+| Constraint | Source | Impact | Owner |
+|---|---|---|---|
+| Tenant permission filter must happen before retrieval | AI_SECURITY_REVIEW | Prevents cross-tenant leakage | maintainer |
 
 ## Decisions already made
 
-- First preview uses demo credentials and seed data.
+| Decision | Source | Date | Revisit condition |
+|---|---|---|---|
+| First preview uses demo credentials and seed data | PROJECT_BRIEF | 2026-06-02 | external beta starts |

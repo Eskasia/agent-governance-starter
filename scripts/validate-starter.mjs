@@ -154,36 +154,113 @@ function validateProfile(errors, profileFile) {
   }
 }
 
+function packageScripts(errors) {
+  if (!exists('package.json')) return {};
+  try {
+    return readJson('package.json').scripts || {};
+  } catch (error) {
+    fail(errors, `package.json is not valid JSON: ${error.message}`);
+    return {};
+  }
+}
+
 const errors = [];
+
+if (exists('ANTIGRAVITY.md')) {
+  fail(errors, 'Root ANTIGRAVITY.md should not exist; use docs/adapters/antigravity.md');
+}
+
+if (exists('CODEX.md')) {
+  fail(errors, 'Root CODEX.md should not exist; Codex uses AGENTS.md');
+}
+
+if (exists('docs/adr/000-template.md')) {
+  fail(errors, 'ADR templates belong under templates/docs/adr, not docs/adr');
+}
 
 for (const file of [
   'README.md',
   'package.json',
   'AGENTS.md',
   'CLAUDE.md',
-  'ANTIGRAVITY.md',
   'LICENSE',
   'CONTRIBUTING.md',
+  'CODE_OF_CONDUCT.md',
   'SECURITY.md',
   'ROADMAP.md',
   '.gitignore',
   'VALIDATION.md',
   'docs/index.md',
+  'docs/governance-model.md',
   'docs/tool-registry.md',
+  'docs/runtime-proof.md',
+  'docs/adapters/codex.md',
+  'docs/adapters/claude-code.md',
+  'docs/adapters/antigravity.md',
+  'docs/adr/0001-governance-model.md',
+  '.github/ISSUE_TEMPLATE/bug_report.yml',
+  '.github/ISSUE_TEMPLATE/feature_request.yml',
+  '.github/ISSUE_TEMPLATE/config.yml',
+  '.github/pull_request_template.md',
+  '.github/release.yml',
+  '.github/workflows/runtime-proof.yml',
+  'tests/runtime/codex/expected-headings.txt',
+  'tests/runtime/claude/first-response.schema.json',
+  'tests/runtime/antigravity/skill-template/SKILL.md',
+  'scripts/validate-project.mjs',
+  'scripts/lint-template-tables.mjs',
+  'scripts/check-antigravity-skills.mjs',
+  'scripts/smoke-base.mjs',
+  'scripts/smoke-fullstack.mjs',
+  'scripts/fixtures-check.mjs',
+  'scripts/validate-runtime-proof.mjs',
+  'scripts/assert-claude-first-response.mjs',
+  'scripts/runtime-smoke-codex.mjs',
+  'scripts/runtime-smoke-claude.mjs',
+  'scripts/runtime-smoke-antigravity.mjs',
   'profiles/base.json',
   'profiles/fullstack-ai.json',
   'profiles/macos.json',
-  'schemas/project-doc.schema.json',
+  'schemas/profile.schema.json',
+  'schemas/project-config.schema.json',
   'schemas/doctor-output.schema.json',
+  'schemas/task-contract.schema.json',
+  'prompts/README.md',
+  'examples/transcripts/codex-first-run.md',
+  'examples/transcripts/claude-first-run.md',
+  'examples/transcripts/antigravity-first-run.md',
+  'examples/generated/base/START_HERE.md',
+  'examples/generated/base/AGENTS.md',
+  'examples/generated/base/.agent-governance.json',
+  'examples/generated/fullstack-ai/START_HERE.md',
+  'examples/generated/fullstack-ai/AGENTS.md',
+  'examples/generated/fullstack-ai/CLAUDE.md',
+  'examples/generated/fullstack-ai/.agents/AGENTS.md',
+  'examples/generated/fullstack-ai/.agents/skills/implementation-plan/SKILL.md',
+  'templates/runtime/CLAUDE.md',
+  'templates/runtime/antigravity/AGENTS.md',
+  'templates/runtime/antigravity/skills/bootstrap-intake/SKILL.md',
+  'templates/runtime/antigravity/skills/validation-gate/SKILL.md',
+  'templates/runtime/antigravity/skills/implementation-plan/SKILL.md',
+  'templates/runtime/antigravity/skills/release-handoff/SKILL.md',
+  'templates/docs/adr/0001-template.md',
+  'templates/github/ISSUE_TEMPLATE/agent-task.yml',
+  'templates/github/pull_request_template.md',
 ]) {
   requireFile(errors, file);
 }
 
-for (const dir of ['startup', 'workflows', 'templates', 'scripts', 'docs', 'prompts', 'profiles', 'schemas', 'examples/template-adoption']) {
+for (const dir of ['startup', 'workflows', 'templates', 'scripts', 'docs', 'docs/adapters', 'prompts', 'profiles', 'schemas', 'examples/template-adoption', 'examples/generated', 'examples/transcripts', 'tests/runtime']) {
   if (!exists(dir)) fail(errors, `Missing directory: ${dir}`);
 }
 
-for (const file of ['startup/00-agent-start-here.md', 'startup/01-bootstrap-gates.md', 'startup/02-required-project-docs.md']) {
+for (const file of [
+  'startup/00-source-agent-start-here.md',
+  'startup/01-bootstrap-gates.md',
+  'startup/02-document-catalog.md',
+  'workflows/product-shape-tech-route.md',
+  'workflows/skill-and-plugin-adoption.md',
+]) {
   requireFile(errors, file);
 }
 
@@ -206,16 +283,88 @@ for (const file of [
 
 requireIncludes(errors, 'README.md', [
   'Agent-native project governance starter for Codex, Claude Code, and Antigravity',
+  'actions/workflows/validate-starter.yml/badge.svg',
+  'License-MIT',
+  'node-%3E%3D20',
   'startup/01-bootstrap-gates.md',
-  'startup/02-required-project-docs.md',
+  'startup/02-document-catalog.md',
+  'workflows/product-shape-tech-route.md',
+  'workflows/skill-and-plugin-adoption.md',
+  'Good fit',
+  'Not a fit',
+  'init -> fill docs -> doctor -> agent plan -> implementation -> validation -> handoff',
+  'Doctor pass/fail standard',
   'Generated base project tree',
+  '## Runtime Proof',
+  '## Community',
+  'CODE_OF_CONDUCT.md',
   'README.md',
   'node agent-governance-starter/scripts/doctor.mjs ./my-new-project',
+  'product shape / technology route',
+]);
+
+requireIncludes(errors, 'startup/00-source-agent-start-here.md', [
+  'workflows/skill-and-plugin-adoption.md',
+]);
+
+requireIncludes(errors, 'startup/02-document-catalog.md', [
+  'profiles/*.json',
+  'Profile Manifest Contract',
+  'fullstack-ai',
+  'RAG_DESIGN.md',
+  'EVAL_PLAN.md',
+]);
+
+requireIncludes(errors, 'startup/01-bootstrap-gates.md', [
+  '產品形態 / 技術路線 Gate',
+  'user-declared route',
+  'ai-recommended route',
+  'workflows/product-shape-tech-route.md',
+]);
+
+requireIncludes(errors, 'workflows/product-shape-tech-route.md', [
+  'user-declared route',
+  'ai-recommended route',
+  'Q1-Q9',
+  'PROJECT_BRIEF.md',
+  'TECH_STACK.md',
+  '新技術引入 Gate',
+]);
+
+requireIncludes(errors, 'workflows/skill-and-plugin-adoption.md', [
+  'reference-only',
+  'conditional workflow',
+  'runtime adapter',
+  '不全量導入',
+  'TECH_STACK.md',
+  'workflows/product-shape-tech-route.md',
+  'workflows/agent-file-structure.md',
+]);
+
+requireIncludes(errors, 'workflows/tool-routing.md', [
+  'workflows/skill-and-plugin-adoption.md',
+  'Understand-Anything',
+  'CodeGraph',
+  '大型 cybersecurity skill pack 只作 taxonomy 參考',
+  'Skill Creator / Find Skill 只用於重複流程',
+]);
+
+requireIncludes(errors, 'workflows/recommended-tools.md', [
+  'GitHub 候選來源分級',
+  'anthropics/skills',
+  'Lum1104/Understand-Anything',
+  'anthropics/knowledge-work-plugins',
+  'affaan-m/ECC',
+  '暫不採用',
+  '不全量安裝',
 ]);
 
 requireIncludes(errors, 'AGENTS.md', [
   'canonical source of truth',
   'thin adapters',
+  '## Coding Discipline',
+  'Think before coding',
+  'Make surgical edits',
 ]);
 
 requireIncludes(errors, 'CLAUDE.md', [
@@ -223,8 +372,20 @@ requireIncludes(errors, 'CLAUDE.md', [
   'thin Claude Code adapter',
 ]);
 
-requireIncludes(errors, 'ANTIGRAVITY.md', [
-  'not the official Antigravity runtime entrypoint',
+requireIncludes(errors, 'docs/adapters/codex.md', [
+  'AGENTS.md',
+  'CODEX.md',
+  'Not used',
+]);
+
+requireIncludes(errors, 'docs/adapters/claude-code.md', [
+  'CLAUDE.md',
+  'AGENTS.md',
+  'thin adapter',
+]);
+
+requireIncludes(errors, 'docs/adapters/antigravity.md', [
+  'Antigravity',
   '.agents/AGENTS.md',
   '.agents/skills/*/SKILL.md',
 ]);
@@ -232,10 +393,96 @@ requireIncludes(errors, 'ANTIGRAVITY.md', [
 requireIncludes(errors, 'package.json', [
   '"check"',
   '"validate"',
+  '"validate:project"',
+  '"validate:runtime-proof"',
   '"smoke:base"',
   '"smoke:fullstack"',
   '"fixtures"',
+  '"runtime:proof"',
+  '"runtime:proof:codex"',
+  '"runtime:proof:claude"',
+  '"runtime:proof:antigravity"',
   '"ci"',
+]);
+
+const scripts = packageScripts(errors);
+for (const [name, command] of Object.entries(scripts)) {
+  if (/\brm\s+-rf\b/.test(command)) fail(errors, `package.json script ${name} uses POSIX-only rm -rf`);
+  if (/\bmkdir\s+-p\b/.test(command)) fail(errors, `package.json script ${name} uses POSIX-only mkdir -p`);
+  if (/\bgrep\b/.test(command)) fail(errors, `package.json script ${name} uses POSIX-only grep`);
+  if (/(^|[\s;&|])diff(\s|$)/.test(command)) fail(errors, `package.json script ${name} uses POSIX-only diff`);
+}
+
+requireIncludes(errors, '.github/ISSUE_TEMPLATE/bug_report.yml', [
+  'problem_type',
+  'reproduction',
+  'expected',
+  'actual',
+  'profile',
+  'agent_runtime',
+  'doctor_output',
+  'validation_commands',
+]);
+
+requireIncludes(errors, '.github/ISSUE_TEMPLATE/feature_request.yml', [
+  'problem_type',
+  'reproduction',
+  'expected',
+  'actual',
+  'profile',
+  'agent_runtime',
+  'doctor_output',
+  'validation_commands',
+]);
+
+requireIncludes(errors, '.github/pull_request_template.md', [
+  '## Summary',
+  '## Changed Surface',
+  '## Validation',
+  '## Generated Fixture Impact',
+  '## Runtime Adapter Impact',
+  '## Docs Updated',
+]);
+
+requireIncludes(errors, '.github/release.yml', [
+  'Features',
+  'Fixes',
+  'Docs',
+  'Maintenance',
+  'Breaking Changes',
+]);
+
+requireIncludes(errors, 'CODE_OF_CONDUCT.md', [
+  'Expected Behavior',
+  'Unacceptable Behavior',
+  'Enforcement',
+]);
+
+requireIncludes(errors, 'docs/index.md', [
+  'runtime-proof.md',
+  'governance-model.md',
+  'prompts/codex-new-project.md',
+  'workflows/skill-and-plugin-adoption.md',
+  'adapters/codex.md',
+  'adapters/claude-code.md',
+  'adapters/antigravity.md',
+]);
+
+requireIncludes(errors, 'docs/tool-registry.md', [
+  'workflows/skill-and-plugin-adoption.md',
+  'Understand-Anything',
+  'find-skills',
+]);
+
+requireIncludes(errors, 'VALIDATION.md', [
+  'npm run runtime:proof',
+  'RUNTIME_PROOF_REAL=1 npm run runtime:proof',
+  'Ubuntu, macOS, and Windows',
+  'npm run fixtures',
+]);
+
+requireIncludes(errors, 'CONTRIBUTING.md', [
+  'npm run runtime:proof',
 ]);
 
 requireIncludes(errors, 'templates/runtime/START_HERE.md', [
@@ -243,6 +490,9 @@ requireIncludes(errors, 'templates/runtime/START_HERE.md', [
   '{{PROFILE_NAME}}',
   '{{INTAKE_QUESTIONS}}',
   '{{REQUIRED_DOCUMENTS}}',
+  'Product Shape / Tech Route Gate',
+  'user-declared route',
+  'ai-recommended route',
 ]);
 
 requireIncludes(errors, 'templates/runtime/README.md', [
@@ -250,12 +500,103 @@ requireIncludes(errors, 'templates/runtime/README.md', [
   '{{PROFILE_NAME}}',
   '{{REQUIRED_DOCUMENTS}}',
   'doctor.mjs',
+  'product shape / technology route gate',
 ]);
 
-for (const file of ['README.md', 'CLAUDE.md', 'ANTIGRAVITY.md']) {
+requireIncludes(errors, 'templates/runtime/CLAUDE.md', [
+  '@AGENTS.md',
+  'Claude Code Adapter',
+]);
+
+requireIncludes(errors, 'templates/runtime/AGENTS.md', [
+  'product shape / technology route gate',
+  'user-declared route',
+  'ai-recommended route',
+  '## Coding Discipline',
+  'Think before coding',
+  'Make surgical edits',
+  'TECH_STACK.md',
+  'adoption gate',
+]);
+
+requireIncludes(errors, 'templates/runtime/antigravity/AGENTS.md', [
+  'bootstrap-intake',
+  'validation-gate',
+  'implementation-plan',
+  'release-handoff',
+]);
+
+requireIncludes(errors, 'templates/fixed/PROJECT_BRIEF.md', [
+  '## 產品形態決策',
+  '決策模式',
+  '第一版產品形態',
+  'Q1-Q9 依據',
+]);
+
+requireIncludes(errors, 'templates/fixed/TECH_STACK.md', [
+  '## 技術路線決策',
+  '決策模式',
+  '唯一主路線',
+  '新技術引入 gate',
+  'ENV_CHECKLIST.md',
+  '| Frontend |',
+  '| Backend |',
+  '| Database |',
+  '| Main framework / SDK |',
+]);
+
+requireIncludes(errors, 'templates/fixed/TASK_CONTRACT.md', [
+  '| 任務名稱 | 輸入 | 可用工具 | 預期輸出 | 驗證方式 | 不做事項 | 完成標準 | 風險 / 阻塞 |',
+]);
+
+requireIncludes(errors, 'templates/docs/adr/0001-template.md', [
+  '## Reevaluation Triggers',
+  '## Consequences',
+]);
+
+for (const file of [
+  'prompts/codex-new-project.md',
+  'prompts/claude-new-project.md',
+  'prompts/antigravity-new-project.md',
+]) {
+  requireIncludes(errors, file, [
+    'product shape / technology route',
+    'user-declared route',
+    'ai-recommended route',
+  ]);
+}
+
+requireIncludes(errors, 'scripts/doctor.mjs', [
+  'product shape decision should be documented',
+  'technology route decision should be documented',
+  'External repo/skill/plugin/framework adoption should be documented in TECH_STACK.md, ADR, or OPEN_LOOPS.md',
+]);
+
+requireIncludes(errors, 'scripts/init.mjs', [
+  'runtime/CLAUDE.md',
+  'runtime/antigravity/skills/implementation-plan/SKILL.md',
+]);
+
+requireIncludes(errors, 'scripts/validate-project.mjs', [
+  'Missing required document',
+  'Missing adapter file',
+  'fullstack-ai profile requires',
+]);
+
+requireIncludes(errors, 'scripts/lint-template-tables.mjs', [
+  'templates/fixed/TASK_CONTRACT.md',
+  'must be a markdown pipe-table row',
+]);
+
+requireIncludes(errors, 'scripts/check-antigravity-skills.mjs', [
+  'implementation-plan',
+  'release-handoff',
+]);
+
+for (const file of ['README.md', 'CLAUDE.md']) {
   if (exists(file)) {
     const content = readFile(file);
-    if (content.includes('then 01-bootstrap-gates.md') || content.includes('then 02-required-project-docs.md')) {
+    if (content.includes('then 01-bootstrap-gates.md') || content.includes('then 02-document-catalog.md')) {
       fail(errors, `${file} has ambiguous startup path in first-message text`);
     }
   }
@@ -268,13 +609,24 @@ requireIncludes(errors, 'scripts/init.mjs', [
   'runtime/AGENTS.md',
   'runtime/START_HERE.md',
   'runtime/README.md',
+  'runtime/CLAUDE.md',
   'startup/01-bootstrap-gates.md',
   '.agents/AGENTS.md',
   '.agents/skills/bootstrap-intake/SKILL.md',
+  '.agents/skills/implementation-plan/SKILL.md',
 ]);
 requireIncludes(errors, 'scripts/doctor.mjs', ['--strict', '--json', 'warnings as failures']);
 requireIncludes(errors, '.github/workflows/validate-starter.yml', [
   'npm run ci',
+  'ubuntu-latest',
+  'macos-latest',
+  'windows-latest',
+]);
+
+requireIncludes(errors, '.github/workflows/runtime-proof.yml', [
+  'workflow_dispatch',
+  'npm run runtime:proof',
+  'RUNTIME_PROOF_REAL',
 ]);
 
 if (exists('scripts/init.mjs')) {
@@ -291,9 +643,34 @@ for (const file of [
   'scripts/init.mjs',
   'scripts/doctor.mjs',
   'scripts/validate-starter.mjs',
+  'scripts/validate-project.mjs',
+  'scripts/lint-template-tables.mjs',
+  'scripts/check-antigravity-skills.mjs',
+  'scripts/smoke-base.mjs',
+  'scripts/smoke-fullstack.mjs',
+  'scripts/fixtures-check.mjs',
+  'scripts/validate-runtime-proof.mjs',
+  'scripts/assert-claude-first-response.mjs',
+  'scripts/runtime-smoke-codex.mjs',
+  'scripts/runtime-smoke-claude.mjs',
+  'scripts/runtime-smoke-antigravity.mjs',
   '.github/workflows/validate-starter.yml',
+  '.github/workflows/runtime-proof.yml',
 ]) {
   requireRealNewlines(errors, file);
+}
+
+try {
+  JSON.parse(readFile('tests/runtime/claude/first-response.schema.json'));
+} catch (error) {
+  fail(errors, `tests/runtime/claude/first-response.schema.json is not valid JSON: ${error.message}`);
+}
+
+if (exists('tests/runtime/antigravity/skill-template/SKILL.md')) {
+  const skill = readFile('tests/runtime/antigravity/skill-template/SKILL.md');
+  if (!/^name:\s*intake-audit$/m.test(skill) || !/^description:\s*\S+/m.test(skill)) {
+    fail(errors, 'tests/runtime/antigravity/skill-template/SKILL.md frontmatter must include name and description');
+  }
 }
 
 for (const file of templateMarkdownFiles()) {
@@ -400,6 +777,8 @@ function collectMarkdown(dir) {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       if (entry.name === '.git' || entry.name === 'node_modules') continue;
+      const relativeDir = path.relative(root, fullPath);
+      if (relativeDir === path.join('docs', 'research')) continue;
       collectMarkdown(fullPath);
     } else if (entry.isFile() && entry.name.endsWith('.md')) {
       allMarkdown.push(fullPath);

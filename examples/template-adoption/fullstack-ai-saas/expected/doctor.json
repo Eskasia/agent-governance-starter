@@ -44,41 +44,31 @@
       "file": "TECH_STACK.md",
       "status": "ok",
       "trigger": "Every project"
-    }
-  ],
-  "recommended": [
+    },
     {
       "file": "DATA_MODEL.md",
-      "status": "present",
+      "status": "ok",
       "trigger": "Fullstack AI profile"
     },
     {
       "file": "API_CONTRACT.md",
-      "status": "present",
+      "status": "ok",
       "trigger": "Fullstack AI profile"
     },
     {
       "file": "ENV_CHECKLIST.md",
-      "status": "present",
-      "trigger": "Fullstack AI profile"
-    },
-    {
-      "file": "AGENT_RUNTIME.md",
-      "status": "present",
-      "trigger": "Fullstack AI profile"
-    },
-    {
-      "file": "RAG_DESIGN.md",
-      "status": "present",
-      "trigger": "Fullstack AI profile"
-    },
-    {
-      "file": "EVAL_PLAN.md",
-      "status": "present",
+      "status": "ok",
       "trigger": "Fullstack AI profile"
     },
     {
       "file": "AI_SECURITY_REVIEW.md",
+      "status": "ok",
+      "trigger": "Fullstack AI profile"
+    }
+  ],
+  "recommended": [
+    {
+      "file": "AGENT_RUNTIME.md",
       "status": "present",
       "trigger": "Fullstack AI profile"
     }
@@ -113,6 +103,16 @@
       "file": "MACOS_RELEASE_CHECKLIST.md",
       "present": false,
       "trigger": "Has macOS app build / TCC / signing"
+    },
+    {
+      "file": "RAG_DESIGN.md",
+      "present": true,
+      "trigger": "Enable when the product uses RAG, retrieval, knowledge base, document Q&A, or citation"
+    },
+    {
+      "file": "EVAL_PLAN.md",
+      "present": true,
+      "trigger": "Enable when LLM, RAG, or agent output needs regression testing or golden sets"
     }
   ],
   "warnings": [],

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.com/agent-governance-starter/project-doc.schema.json",
-  "title": "Agent Governance Profile",
+  "$id": "https://example.com/agent-governance-starter/profile.schema.json",
+  "title": "Agent Governance Profile Manifest",
   "type": "object",
   "required": ["schemaVersion", "name", "description", "documents"],
   "properties": {

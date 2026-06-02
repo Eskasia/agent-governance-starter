@@ -9,9 +9,9 @@
 | 需求、名詞、邊界不清 | `grill-with-docs` | 先補 `PROJECT_BRIEF.md`、`SPEC.md`、`CONTEXT.md` |
 | 新功能、bugfix、狀態流程 | `tdd` 或 smoke check | 手寫最小 regression check |
 | bug 原因不明、測試反覆掛 | `diagnose` | reproduce / minimise / hypothesise / instrument / fix |
-| 不熟悉既有 repo / 模組、需要先理解系統脈絡 | `zoom-out`；若已有 `.codegraph/` 再用 CodeGraph | `rg`、直接讀檔、局部架構筆記 |
+| 不熟悉既有 repo / 模組、需要先理解系統脈絡 | `zoom-out`；大型陌生 repo 才用 Understand-Anything 建 knowledge graph；若已有 `.codegraph/` 再用 CodeGraph | `rg`、直接讀檔、局部架構筆記 |
 | UI 方向、狀態模型、domain flow 不確定，正式實作前要先玩一次 | `prototype` | `UI_SPEC.md` + 靜態 HTML demo |
-| 大 repo 查 symbol、route、call graph、impact | CodeGraph，前提是已有 `.codegraph/` | `rg`、語言伺服器、測試 |
+| 大 repo 查 symbol、route、call graph、impact | CodeGraph，前提是已有 `.codegraph/` 或使用者明確要求建立索引 | `rg`、語言伺服器、測試 |
 | 里程碑 review、交接、壓縮上下文 | repomix | `OPEN_LOOPS.md`、handoff markdown |
 | 常見命令輸出很大、想壓縮 token：`ls/tree/read/grep/git diff/test/lint/tsc/playwright/docker logs` | RTK：`rtk <command>` | 原生命令加範圍限制 |
 | 階段完成同步文件 | `neat-freak` | 手動更新 `OPEN_LOOPS.md` / handoff |
@@ -19,7 +19,7 @@
 | 長任務、大輸出、context 快爆、compaction 後接不上 | `docs/experiments/context-mode.md` | 小範圍讀檔與中途 handoff |
 | 可跨專案重用的經驗 | LLMwiki | 專案內 docs 或 ad hoc note |
 | 不確定規則、經驗、流程該寫到哪裡 | `workflows/agent-file-structure.md` | 保留在 `OPEN_LOOPS.md` |
-| 論文、文獻、citation | `academic-research` | 手動文獻表與 citation check |
+| 論文、文獻、citation | `academic-research`，只在研究任務啟用 | 手動文獻表與 citation check |
 | 本機或 preview web UI 自動化測試 | Playwright | Browser / Chrome manual QA |
 | React/shadcn animated icons、hover/tap micro-interaction | Its Hover，依 `workflows/ui-ux.md` 使用 | CSS transition / local component |
 | App 截圖 → Design System → 前端初稿 | `workflows/design-system-from-screenshots.md` | `DESIGN_SYSTEM.md` |
@@ -32,11 +32,19 @@
 | RAG、AI agent、MCP、eval、AI 系統設計 | `workflows/ai-system-design.md` | `RAG_DESIGN.md` / `EVAL_PLAN.md` / `AI_SECURITY_REVIEW.md` |
 | PDF 讀取、產出、版面檢查 | `pdf` skill | 本機 PDF library 或 manual review |
 | 一頁紙、白皮書、履歷、作品集、landing page | `kami` | Markdown / HTML artifact |
-| 技能建立或安裝 | `skill-creator` / `skill-installer` | 手動文件與本機 scripts |
+| 技能建立或安裝 | 先讀 `workflows/skill-and-plugin-adoption.md`，再用 `skill-creator` / `skill-installer` | 手動文件與本機 scripts |
 | PRD、issue、triage、review | `to-prd` / `to-issues` / `triage`；無 issue tracker 時用 `TASK_CONTRACT.md` | `TASK_CONTRACT.md` |
-| 安全審查、靜態分析、依賴風險 | `audit-prep-assistant` / `semgrep` / `codeql` | threat checklist + package audit |
+| 安全審查、靜態分析、依賴風險 | `audit-prep-assistant` / `semgrep` / `codeql`；大型 cybersecurity skill pack 只作 taxonomy 參考 | threat checklist + package audit |
 | PPT、簡報、slide deck | `workflows/presentation.md` | Markdown deck / local HTML slides |
 | 跨前端/後端/DB/安全/AI/部署任兩類以上 | lead agent 先判斷是否分工 | 主 agent 本地切小步 |
+
+## 外部能力採用規則
+
+- 引入外部 GitHub repo、skill、plugin、agent pack、security pack、SDK 或 MCP server 前，先讀 `workflows/skill-and-plugin-adoption.md`。
+- Understand-Anything 只用於大型陌生 repo / knowledge graph onboarding；`.understand-anything/` 輸出視為衍生 artifact，不是 starter 必備文件。
+- CodeGraph 只在 `.codegraph/` 已存在或使用者明確要求建立索引時使用；它不取代 `rg`、直接讀檔與測試。
+- Taste、Frontend Design、Shadcn、Its Hover 等 UI 能力只能在 UI 任務中依 `UI_SPEC.md` 或 `DESIGN_SYSTEM.md` 選一條主路線。
+- Skill Creator / Find Skill 只用於重複流程的建立或搜尋，不作日常 coding 預設。
 
 ## RTK 使用規則
 

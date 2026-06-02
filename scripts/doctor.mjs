@@ -134,7 +134,14 @@ function hasContent(relativePath) {
     return true;
   });
   if (relativePath === 'TASK_CONTRACT.md') {
-    return /任務[:：]\s*(?!<任務名稱>)[^\n]+/.test(content);
+    const taskDetails = content.match(/## 任務詳情\s*\n([\s\S]*?)(?=\n## |\s*$)/);
+    if (!taskDetails) return false;
+    return taskDetails[1].split('\n').some((line) => {
+      const cells = line.split('|').slice(1, -1).map((cell) => cell.trim());
+      if (cells.length === 0) return false;
+      const taskName = cells[0] || '';
+      return taskName && taskName !== '任務名稱' && taskName !== '<任務名稱>' && !/^[-]+$/.test(taskName);
+    });
   }
 
   if (relativePath === 'OPEN_LOOPS.md') {
@@ -142,6 +149,76 @@ function hasContent(relativePath) {
   }
 
   return filledLines.length > 5;
+}
+
+function hasRouteMode(content) {
+  return /^-\s*決策模式[：:]\s*(user-declared route|ai-recommended route)\s*$/im.test(content)
+    || /^\|\s*決策模式\s*\|\s*(user-declared route|ai-recommended route)\s*\|/im.test(content);
+}
+
+function hasFilledLine(content, label) {
+  return new RegExp(`^-\\s*${label}[：:]\\s*\\S.+$`, 'im').test(content)
+    || new RegExp(`^\\|\\s*${label}\\s*\\|\\s*\\S[^|]*\\|`, 'im').test(content);
+}
+
+function hasProductShapeDecision() {
+  if (!exists('PROJECT_BRIEF.md')) return false;
+  const content = readFile('PROJECT_BRIEF.md');
+  return content.includes('## 產品形態決策')
+    && hasRouteMode(content)
+    && hasFilledLine(content, '第一版產品形態')
+    && hasFilledLine(content, 'Q1-Q9 依據');
+}
+
+function hasTechnologyRouteDecision() {
+  if (!exists('TECH_STACK.md')) return false;
+  const content = readFile('TECH_STACK.md');
+  return content.includes('## 技術路線決策')
+    && hasRouteMode(content)
+    && hasFilledLine(content, '唯一主路線')
+    && hasFilledLine(content, '選擇理由')
+    && content.includes('| Frontend |')
+    && content.includes('| Backend |')
+    && content.includes('| Database |')
+    && content.includes('| Main framework / SDK |')
+    && content.includes('| Deployment |');
+}
+
+function readExisting(relativePaths) {
+  return relativePaths.filter((file) => exists(file)).map((file) => readFile(file)).join('\n');
+}
+
+function adrDecisionText() {
+  const adrDir = path.join(projectDir, 'docs/adr');
+  if (!fs.existsSync(adrDir)) return '';
+  return fs.readdirSync(adrDir)
+    .filter((entry) => entry.endsWith('.md'))
+    .map((entry) => fs.readFileSync(path.join(adrDir, entry), 'utf8'))
+    .join('\n');
+}
+
+function mentionsExternalCapability() {
+  const content = readExisting([
+    'README.md',
+    'PROJECT_BRIEF.md',
+    'SPEC.md',
+    'TASK_CONTRACT.md',
+    'AGENTS.md',
+    'TECH_STACK.md',
+    'API_CONTRACT.md',
+    'AGENT_RUNTIME.md',
+    'AI_SECURITY_REVIEW.md',
+  ]);
+  return /\b(skill|plugin|MCP server|agent pack|SDK|framework|provider)\b/i.test(content)
+    || /(外部|技能|插件|框架|供應商|工具包)/.test(content);
+}
+
+function hasExternalAdoptionDecisionCarrier() {
+  const content = [
+    readExisting(['TECH_STACK.md', 'OPEN_LOOPS.md']),
+    adrDecisionText(),
+  ].join('\n');
+  return /(採用|adoption|選擇理由|唯一主路線|新技術引入 gate|ADR|open|blocked)/i.test(content);
 }
 
 function statusForRequired(doc) {
@@ -198,6 +275,18 @@ function buildResult(profile) {
     if (!tc.includes('驗證') && !tc.includes('verif') && !tc.includes('test')) {
       warnings.push('TASK_CONTRACT.md: tasks should each have a verification method');
     }
+  }
+
+  if (exists('PROJECT_BRIEF.md') && !hasProductShapeDecision()) {
+    warnings.push('PROJECT_BRIEF.md: product shape decision should be documented');
+  }
+
+  if (exists('TECH_STACK.md') && !hasTechnologyRouteDecision()) {
+    warnings.push('TECH_STACK.md: technology route decision should be documented');
+  }
+
+  if (options.strict && mentionsExternalCapability() && !hasExternalAdoptionDecisionCarrier()) {
+    warnings.push('External repo/skill/plugin/framework adoption should be documented in TECH_STACK.md, ADR, or OPEN_LOOPS.md');
   }
 
   const missing = required.filter((check) => check.status === 'missing').map((check) => check.file);

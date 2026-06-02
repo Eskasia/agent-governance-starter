@@ -1,25 +1,52 @@
 # TECH_STACK.md
 
+## 技術路線決策
+
+| Field | Decision |
+|---|---|
+| 決策模式 | ai-recommended route |
+| 唯一主路線 | TypeScript fullstack AI web app on Next.js, Supabase Postgres, and Vercel preview |
+| 選擇理由 | 前後端共享 TypeScript 型別，web preview 讓 owner 可直接驗收，Supabase RLS 適合客戶文件權限，Vercel preview 支撐快速迭代 |
+| 排除路線 | 不採 native app、小程序、純 API、desktop app，因為第一版需要可分享 web preview、上傳文件、登入、資料表與 citation UI |
+| 後期風險 | RAG 成本、tenant 權限、citation 正確性、provider API 行為變化會影響維護 |
+| 重評估條件 | 需要離線、原生檔案權限、API-only 客戶整合、或資料量超出 Supabase preview 能力時重新評估 |
+| 新技術引入 gate | 新增 AI SDK、vector DB、reranker、queue 或 auth provider 前，必須更新 TECH_STACK、RAG_DESIGN、EVAL_PLAN 或 AI_SECURITY_REVIEW |
+
 ## Runtime
 
 | Layer | Choice | Version | Reason | Alternative considered |
 |---|---|---|---|---|
-| Language | TypeScript | pinned in repo | Frontend/backend shared types | Python |
-| Framework | Next.js | pinned in repo | Preview deployment path | Remix |
+| Frontend | Next.js | pinned in repo | Preview deployment path and citation UI | Native app |
+| Backend | Next.js route handlers / server actions | pinned in repo | Keeps first-version API boundary close to UI | Separate FastAPI service |
 | Package manager | pnpm | pinned in repo | Existing local default | npm |
 | Database | Supabase Postgres | current cloud version | RLS and auth fit | SQLite |
+| Main framework / SDK | OpenAI SDK | current verified version | Embeddings and answer generation | Local model runtime |
 | Deployment | Vercel preview | current platform | Shareable preview URL | local only |
 
 ## External Services
 
-| Service | Purpose | Env vars | Owner |
+| Service | Purpose | Owner | Env checklist reference |
 |---|---|---|---|
-| OpenAI | embeddings / answering | `OPENAI_API_KEY` | owner |
+| OpenAI | embeddings / answering | owner | ENV_CHECKLIST.md |
 
 ## Version Policy
 
-- Verify current API behavior before model or SDK changes.
+| Area | Policy |
+|---|---|
+| Runtime versions | Verify current API behavior before model or SDK changes |
+| Package versions | Pin in repo before preview |
+| Upgrade cadence | Re-check before each preview handoff |
 
 ## Constraints
 
-- No tenant data in unnecessary model context.
+| Constraint | Source | Impact |
+|---|---|---|
+| No tenant data in unnecessary model context | AI_SECURITY_REVIEW | reduces tenant data exposure |
+
+## Rule
+
+| Rule | Detail |
+|---|---|
+| Missing layer | Fill unavailable runtime layers with `n/a` |
+| New technology gate | New AI SDK, vector DB, reranker, queue, auth provider, or MCP server must update route docs |
+| Env boundary | Env vars, secrets, service accounts, and credentials belong in `ENV_CHECKLIST.md` |

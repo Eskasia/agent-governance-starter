@@ -26,28 +26,44 @@ node scripts/doctor.mjs --strict /path/to/your/project
 
 Strict mode treats missing documents and warnings as failures. Normal mode allows placeholder warnings so a freshly initialized project can still be inspected.
 
+## Generated Project Validation
+
+Validates generated projects after `init`: required docs from `profiles/*.json`, runtime adapter files, strict table templates, commands, open loops, and profile-specific docs.
+
+```bash
+node scripts/validate-project.mjs /path/to/generated/project
+```
+
+After smoke generation:
+
+```bash
+npm run validate:project
+```
+
 ## Init Smoke Checks
 
 ```bash
-tmp=$(mktemp -d)
-node scripts/init.mjs "$tmp/base" --agent codex
-node scripts/doctor.mjs "$tmp/base"
-
-tmp=$(mktemp -d)
-node scripts/init.mjs "$tmp/fullstack" --agent all --profile fullstack-ai
-node scripts/doctor.mjs "$tmp/fullstack"
+npm run smoke:base
+npm run smoke:fullstack
 ```
 
 ## Template Adoption Fixtures
 
-The starter keeps two filled example project packs under `examples/template-adoption/`.
+The starter keeps filled example project packs under `examples/template-adoption/`.
 
 | Fixture | What it validates | Strict check |
 |---|---|---|
-| `fullstack-ai-saas` | Fixed docs plus RAG, eval, and AI security templates | `node scripts/doctor.mjs --strict examples/template-adoption/fullstack-ai-saas` |
+| `base-minimal` | Fixed docs plus base profile expected doctor JSON | `node scripts/doctor.mjs --strict examples/template-adoption/base-minimal` |
+| `fullstack-ai-saas` | Fixed docs plus required fullstack docs, optional RAG/eval docs, and AI security templates | `node scripts/doctor.mjs --strict examples/template-adoption/fullstack-ai-saas` |
 | `macos-beta-handoff` | Fixed docs plus macOS release and tester handoff templates | `node scripts/doctor.mjs --strict examples/template-adoption/macos-beta-handoff` |
 
 These fixtures are not production projects. They are local adoption proofs that required templates can be filled coherently across different project types.
+
+Expected doctor JSON is checked with:
+
+```bash
+npm run fixtures
+```
 
 ## CI
 
@@ -57,17 +73,33 @@ GitHub Actions entrypoint:
 .github/workflows/validate-starter.yml
 ```
 
-The workflow runs:
+The workflow runs on Ubuntu, macOS, and Windows:
 
 ```bash
-node scripts/validate-starter.mjs .
-node scripts/init.mjs "$RUNNER_TEMP/base" --agent codex
-node scripts/doctor.mjs "$RUNNER_TEMP/base"
-node scripts/init.mjs "$RUNNER_TEMP/fullstack" --agent all --profile fullstack-ai
-node scripts/doctor.mjs "$RUNNER_TEMP/fullstack"
-node scripts/doctor.mjs --strict examples/template-adoption/fullstack-ai-saas
-node scripts/doctor.mjs --strict examples/template-adoption/macos-beta-handoff
+npm run ci
 ```
+
+Local validation also includes:
+
+```bash
+node scripts/lint-template-tables.mjs
+node scripts/check-antigravity-skills.mjs
+```
+
+Runtime proof has a separate manual workflow:
+
+```text
+.github/workflows/runtime-proof.yml
+```
+
+Public CI runs without secrets. Runtime proof defaults to mock mode, while real runtime proof is opt-in:
+
+```bash
+npm run runtime:proof
+RUNTIME_PROOF_REAL=1 npm run runtime:proof
+```
+
+`RUNTIME_PROOF_REAL=1` attempts the local CLIs named by `CODEX_BIN`, `CLAUDE_BIN`, and `ANTIGRAVITY_BIN` or their default command names. Missing real CLIs must fail clearly instead of falling back to mock output.
 
 ## Governance
 

@@ -12,7 +12,7 @@
 
 | 類型 | 必讀文件 | 必補產物 |
 |---|---|---|
-| RAG / 知識庫問答 | `startup/02-required-project-docs.md`、本文件 | `RAG_DESIGN.md`、`EVAL_PLAN.md` |
+| RAG / 知識庫問答 | `startup/02-document-catalog.md`、本文件 | `RAG_DESIGN.md`、`EVAL_PLAN.md` |
 | Agent / MCP / tool-use | `workflows/production-agent.md`、本文件 | `AGENT_RUNTIME.md`、`EVAL_PLAN.md`、必要時 `AI_SECURITY_REVIEW.md` |
 | 多租戶 AI SaaS | `workflows/fullstack.md`、本文件 | `DATA_MODEL.md`、`API_CONTRACT.md`、`AI_SECURITY_REVIEW.md` |
 | 文件智能 / OCR / extraction | 本文件、必要時 `workflows/fullstack.md` | `EVAL_PLAN.md`、資料 schema、抽取錯誤樣本 |

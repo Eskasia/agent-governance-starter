@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/agent-governance-starter/project-config.schema.json",
+  "title": "Agent Governance Project Config",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "generator",
+    "profile",
+    "agent",
+    "requiredDocuments",
+    "includedDocuments"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "generator": {
+      "type": "string",
+      "const": "agent-governance-starter"
+    },
+    "profile": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "agent": {
+      "type": "string",
+      "enum": ["codex", "claude", "antigravity", "all"]
+    },
+    "requiredDocuments": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z0-9_/.]+\\.md$"
+      }
+    },
+    "includedDocuments": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z0-9_/.]+\\.md$"
+      }
+    }
+  },
+  "additionalProperties": false
+}

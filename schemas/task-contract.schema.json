@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/agent-governance-starter/task-contract.schema.json",
+  "title": "Task Contract Table Contract",
+  "type": "object",
+  "required": ["overview", "details", "acceptance"],
+  "properties": {
+    "overview": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "status", "dependency", "verificationResult"]
+      }
+    },
+    "details": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "input", "tools", "output", "verification", "nonGoals", "done", "risk"]
+      }
+    },
+    "acceptance": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["check", "status", "evidence"]
+      }
+    }
+  },
+  "additionalProperties": true
+}
