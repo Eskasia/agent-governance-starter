@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/agent-governance-starter/project-doc.schema.json",
+  "title": "Agent Governance Profile",
+  "type": "object",
+  "required": ["schemaVersion", "name", "description", "documents"],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "extends": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/document"
+      }
+    },
+    "conditionalHints": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/document"
+      }
+    }
+  },
+  "$defs": {
+    "document": {
+      "type": "object",
+      "required": ["file", "template", "category", "required", "trigger"],
+      "properties": {
+        "file": {
+          "type": "string",
+          "pattern": "^[A-Z0-9_/.]+\\.md$"
+        },
+        "template": {
+          "type": "string",
+          "pattern": "^(fixed|conditional|runtime)/[A-Z0-9_/.]+\\.md$"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["fixed", "conditional", "runtime"]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "trigger": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

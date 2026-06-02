@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "name": "fullstack-ai",
+  "extends": "base",
+  "description": "Governance docs for fullstack AI products with data, API, environment, RAG, eval, and AI security surfaces.",
+  "documents": [
+    {
+      "file": "DATA_MODEL.md",
+      "template": "conditional/DATA_MODEL.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Fullstack AI profile"
+    },
+    {
+      "file": "API_CONTRACT.md",
+      "template": "conditional/API_CONTRACT.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Fullstack AI profile"
+    },
+    {
+      "file": "ENV_CHECKLIST.md",
+      "template": "conditional/ENV_CHECKLIST.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Fullstack AI profile"
+    },
+    {
+      "file": "AGENT_RUNTIME.md",
+      "template": "conditional/AGENT_RUNTIME.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Fullstack AI profile"
+    },
+    {
+      "file": "RAG_DESIGN.md",
+      "template": "conditional/RAG_DESIGN.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Fullstack AI profile"
+    },
+    {
+      "file": "EVAL_PLAN.md",
+      "template": "conditional/EVAL_PLAN.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Fullstack AI profile"
+    },
+    {
+      "file": "AI_SECURITY_REVIEW.md",
+      "template": "conditional/AI_SECURITY_REVIEW.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Fullstack AI profile"
+    }
+  ],
+  "conditionalHints": []
+}

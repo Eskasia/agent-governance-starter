@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/agent-governance-starter/doctor-output.schema.json",
+  "title": "Agent Governance Doctor Output",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "projectDir",
+    "profile",
+    "status",
+    "required",
+    "recommended",
+    "conditional",
+    "warnings",
+    "missing",
+    "unfilled"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "projectDir": {
+      "type": "string"
+    },
+    "profile": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["ready", "warning", "missing"]
+    },
+    "strict": {
+      "type": "boolean"
+    },
+    "required": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/check"
+      }
+    },
+    "recommended": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/check"
+      }
+    },
+    "conditional": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/conditional"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "missing": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "unfilled": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "check": {
+      "type": "object",
+      "required": ["file", "status"],
+      "properties": {
+        "file": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["ok", "missing", "unfilled", "present", "absent"]
+        },
+        "trigger": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "conditional": {
+      "type": "object",
+      "required": ["file", "present", "trigger"],
+      "properties": {
+        "file": {
+          "type": "string"
+        },
+        "present": {
+          "type": "boolean"
+        },
+        "trigger": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
