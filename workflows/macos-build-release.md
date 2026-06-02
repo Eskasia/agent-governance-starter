@@ -1,4 +1,4 @@
-# 10 macOS App Build And Release
+# macOS App Build And Release
 
 適用：SwiftUI、AppKit、Tauri、Electron、menu bar app、需要 Accessibility / Screen Recording / Input Monitoring / Automation 權限的 macOS app。
 

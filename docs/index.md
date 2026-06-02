@@ -27,6 +27,7 @@
 | UI / UX | `../workflows/ui-ux.md` |
 | Validation and release | `../workflows/validation-release.md` |
 | Tool selection | `../workflows/tool-routing.md` |
+| Tool availability | `tool-registry.md` |
 | Tool sources | `../workflows/recommended-tools.md` |
 | Presentation | `../workflows/presentation.md` |
 | Agent file structure | `../workflows/agent-file-structure.md` |

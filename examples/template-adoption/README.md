@@ -16,4 +16,4 @@ These are **not production projects**. They are adoption proofs showing that tem
 
 The CI workflow checks each fixture with its declared profile and compares each `expected/doctor.json` against live `doctor --json` output.
 
-`PROJECT_BRIEF.md`, `SPEC.md`, `CONTEXT.md`, `TASK_CONTRACT.md`, `OPEN_LOOPS.md`, `AGENTS.md`, `TECH_STACK.md`.
+`README.md`, `PROJECT_BRIEF.md`, `SPEC.md`, `CONTEXT.md`, `TASK_CONTRACT.md`, `OPEN_LOOPS.md`, `AGENTS.md`, `TECH_STACK.md`.

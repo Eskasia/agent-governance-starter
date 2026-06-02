@@ -4,6 +4,7 @@
   "profile": "base",
   "agent": "codex",
   "requiredDocuments": [
+    "README.md",
     "PROJECT_BRIEF.md",
     "SPEC.md",
     "CONTEXT.md",
@@ -13,6 +14,7 @@
     "TECH_STACK.md"
   ],
   "includedDocuments": [
+    "README.md",
     "PROJECT_BRIEF.md",
     "SPEC.md",
     "CONTEXT.md",

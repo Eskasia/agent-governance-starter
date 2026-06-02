@@ -6,6 +6,11 @@
   "strict": false,
   "required": [
     {
+      "file": "README.md",
+      "status": "ok",
+      "trigger": "Every project"
+    },
+    {
       "file": "PROJECT_BRIEF.md",
       "status": "ok",
       "trigger": "Every project"

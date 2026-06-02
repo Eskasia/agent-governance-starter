@@ -169,6 +169,7 @@ for (const file of [
   '.gitignore',
   'VALIDATION.md',
   'docs/index.md',
+  'docs/tool-registry.md',
   'profiles/base.json',
   'profiles/fullstack-ai.json',
   'profiles/macos.json',
@@ -207,6 +208,8 @@ requireIncludes(errors, 'README.md', [
   'Agent-native project governance starter for Codex, Claude Code, and Antigravity',
   'startup/01-bootstrap-gates.md',
   'startup/02-required-project-docs.md',
+  'Generated base project tree',
+  'README.md',
   'node agent-governance-starter/scripts/doctor.mjs ./my-new-project',
 ]);
 
@@ -235,6 +238,20 @@ requireIncludes(errors, 'package.json', [
   '"ci"',
 ]);
 
+requireIncludes(errors, 'templates/runtime/START_HERE.md', [
+  '{{AGENT}}',
+  '{{PROFILE_NAME}}',
+  '{{INTAKE_QUESTIONS}}',
+  '{{REQUIRED_DOCUMENTS}}',
+]);
+
+requireIncludes(errors, 'templates/runtime/README.md', [
+  '{{AGENT}}',
+  '{{PROFILE_NAME}}',
+  '{{REQUIRED_DOCUMENTS}}',
+  'doctor.mjs',
+]);
+
 for (const file of ['README.md', 'CLAUDE.md', 'ANTIGRAVITY.md']) {
   if (exists(file)) {
     const content = readFile(file);
@@ -244,11 +261,31 @@ for (const file of ['README.md', 'CLAUDE.md', 'ANTIGRAVITY.md']) {
   }
 }
 
-requireIncludes(errors, 'scripts/init.mjs', ['--agent', '--profile', '--all', 'START_HERE.md', '.agents/AGENTS.md', '.agents/skills/bootstrap-intake/SKILL.md']);
+requireIncludes(errors, 'scripts/init.mjs', [
+  '--agent',
+  '--profile',
+  '--all',
+  'runtime/AGENTS.md',
+  'runtime/START_HERE.md',
+  'runtime/README.md',
+  'startup/01-bootstrap-gates.md',
+  '.agents/AGENTS.md',
+  '.agents/skills/bootstrap-intake/SKILL.md',
+]);
 requireIncludes(errors, 'scripts/doctor.mjs', ['--strict', '--json', 'warnings as failures']);
 requireIncludes(errors, '.github/workflows/validate-starter.yml', [
   'npm run ci',
 ]);
+
+if (exists('scripts/init.mjs')) {
+  const initScript = readFile('scripts/init.mjs');
+  if (initScript.includes('function agentsContent')) {
+    fail(errors, 'scripts/init.mjs must generate AGENTS.md from templates/runtime/AGENTS.md, not agentsContent()');
+  }
+  if (initScript.includes('Q1. What user and problem')) {
+    fail(errors, 'scripts/init.mjs must read Q1-Q9 from startup/01-bootstrap-gates.md, not hardcode intake questions');
+  }
+}
 
 for (const file of [
   'scripts/init.mjs',
@@ -341,6 +378,20 @@ if (exists('workflows/stage-routing.md')) {
   }
 } else {
   fail(errors, 'Missing workflows/stage-routing.md');
+}
+
+for (const file of collectFiles('workflows', (relativePath) => relativePath.endsWith('.md'))) {
+  const content = readFile(file);
+  if (/^#\s+\d{2}\b/m.test(content)) {
+    fail(errors, `${file} has a historical numbered H1; startup/00-02 is the only linear read order`);
+  }
+}
+
+if (exists('docs/experiments/context-mode.md')) {
+  const content = readFile('docs/experiments/context-mode.md');
+  if (/^#\s+\d{2}\b/m.test(content)) {
+    fail(errors, 'docs/experiments/context-mode.md has a historical numbered H1');
+  }
 }
 
 const allMarkdown = [];

@@ -1,4 +1,4 @@
-# 15 Design System From Screenshots
+# Design System From Screenshots
 
 用途：已有 App 截圖、generated UI、現有 UI 或競品畫面時，先從畫面反推可落地的 Design System，再產生一致的 UI 設計圖、圖片素材或前端 app 初稿。
 

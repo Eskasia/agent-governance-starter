@@ -4,6 +4,7 @@
 
 | 檔案 | 目的 | 完成標準 |
 |---|---|---|
+| `README.md` | 初始化後的專案入口、讀檔順序、doctor 指令 | 新 agent 能先找到 `START_HERE.md` 與 runtime entrypoint |
 | `PROJECT_BRIEF.md` | 專案的一句話、使用者、問題、MVP | 能讓新 agent 30 秒理解方向 |
 | `SPEC.md` | 功能範圍、非目標、驗收標準 | 每條驗收可用 yes/no 判斷 |
 | `CONTEXT.md` | shared language、角色、資料物件、易混淆詞 | 名詞不再漂移 |

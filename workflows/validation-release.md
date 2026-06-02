@@ -1,4 +1,4 @@
-# 05 Validation And Release
+# Validation And Release
 
 ## 每步驗證
 
