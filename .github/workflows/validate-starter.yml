@@ -15,12 +15,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node scripts/validate-starter.mjs .
-      - run: |
-          node scripts/init.mjs "$RUNNER_TEMP/base" --agent codex
-          node scripts/doctor.mjs "$RUNNER_TEMP/base"
-      - run: |
-          node scripts/init.mjs "$RUNNER_TEMP/fullstack" --agent all --profile fullstack-ai
-          node scripts/doctor.mjs "$RUNNER_TEMP/fullstack"
-      - run: node scripts/doctor.mjs --strict examples/template-adoption/fullstack-ai-saas
-      - run: node scripts/doctor.mjs --strict examples/template-adoption/macos-beta-handoff
+      - run: npm run ci

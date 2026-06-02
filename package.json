@@ -1,0 +1,23 @@
+{
+  "name": "agent-governance-starter",
+  "version": "0.1.0",
+  "description": "Governance bootstrap generator for agent-native projects.",
+  "type": "module",
+  "private": false,
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "check": "node --check scripts/init.mjs && node --check scripts/doctor.mjs && node --check scripts/validate-starter.mjs",
+    "validate": "node scripts/validate-starter.mjs .",
+    "smoke:base": "rm -rf .tmp/base && node scripts/init.mjs .tmp/base --agent codex && node scripts/doctor.mjs .tmp/base",
+    "smoke:fullstack": "rm -rf .tmp/fullstack && node scripts/init.mjs .tmp/fullstack --agent all --profile fullstack-ai && node scripts/doctor.mjs .tmp/fullstack",
+    "fixtures": "mkdir -p .tmp && node scripts/doctor.mjs --json examples/template-adoption/base-minimal > .tmp/base-minimal-doctor.json && diff -u examples/template-adoption/base-minimal/expected/doctor.json .tmp/base-minimal-doctor.json && node scripts/doctor.mjs --strict examples/template-adoption/fullstack-ai-saas && node scripts/doctor.mjs --strict examples/template-adoption/macos-beta-handoff",
+    "ci": "npm run check && npm run validate && npm run smoke:base && npm run smoke:fullstack && npm run fixtures"
+  },
+  "bin": {
+    "agent-governance-init": "./scripts/init.mjs",
+    "agent-governance-doctor": "./scripts/doctor.mjs"
+  }
+}

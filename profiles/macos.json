@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "name": "macos",
+  "extends": "base",
+  "description": "Governance docs for macOS build, permission, release, and beta handoff work.",
+  "documents": [
+    {
+      "file": "MACOS_RELEASE_CHECKLIST.md",
+      "template": "conditional/MACOS_RELEASE_CHECKLIST.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "macOS profile"
+    },
+    {
+      "file": "TESTER_HANDOFF.md",
+      "template": "conditional/TESTER_HANDOFF.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "macOS profile"
+    }
+  ],
+  "conditionalHints": []
+}

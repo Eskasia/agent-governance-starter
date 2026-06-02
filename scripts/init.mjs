@@ -5,56 +5,84 @@ import { fileURLToPath } from 'node:url';
 
 const STARTER_ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const TEMPLATES_DIR = path.join(STARTER_ROOT, 'templates');
-
-const FIXED_DOCS = [
-  'PROJECT_BRIEF.md',
-  'SPEC.md',
-  'CONTEXT.md',
-  'TASK_CONTRACT.md',
-  'OPEN_LOOPS.md',
-  'AGENTS.md',
-  'TECH_STACK.md',
-];
-
-const PROFILE_DOCS = {
-  base: [],
-  'fullstack-ai': [
-    'DATA_MODEL.md',
-    'API_CONTRACT.md',
-    'ENV_CHECKLIST.md',
-    'AGENT_RUNTIME.md',
-    'RAG_DESIGN.md',
-    'EVAL_PLAN.md',
-    'AI_SECURITY_REVIEW.md',
-  ],
-  macos: [
-    'MACOS_RELEASE_CHECKLIST.md',
-    'TESTER_HANDOFF.md',
-  ],
-  presentation: [
-    'PRESENTATION_BRIEF.md',
-    'UI_SPEC.md',
-    'DESIGN_REVIEW.md',
-  ],
-  agent: [
-    'AGENT_RUNTIME.md',
-    'EVAL_PLAN.md',
-    'RAG_DESIGN.md',
-    'ENV_CHECKLIST.md',
-    'AI_SECURITY_REVIEW.md',
-  ],
-};
-
+const PROFILES_DIR = path.join(STARTER_ROOT, 'profiles');
+const PROJECT_CONFIG_FILE = '.agent-governance.json';
 const AGENTS = new Set(['codex', 'claude', 'antigravity', 'all']);
 
+function readJson(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
+function availableProfiles() {
+  if (!fs.existsSync(PROFILES_DIR)) return [];
+  return fs.readdirSync(PROFILES_DIR)
+    .filter((file) => file.endsWith('.json'))
+    .map((file) => path.basename(file, '.json'))
+    .sort();
+}
+
+function uniqueByFile(items) {
+  const byFile = new Map();
+  for (const item of items) byFile.set(item.file, item);
+  return [...byFile.values()];
+}
+
+function loadProfile(name, seen = new Set()) {
+  const profilePath = path.join(PROFILES_DIR, `${name}.json`);
+  if (!fs.existsSync(profilePath)) {
+    throw new Error(`Invalid --profile: ${name}. Available: ${availableProfiles().join(', ')}`);
+  }
+  if (seen.has(name)) {
+    throw new Error(`Profile extends cycle: ${[...seen, name].join(' -> ')}`);
+  }
+
+  const profile = readJson(profilePath);
+  if (!profile.extends) {
+    return {
+      ...profile,
+      documents: profile.documents || [],
+      conditionalHints: profile.conditionalHints || [],
+    };
+  }
+
+  const parent = loadProfile(profile.extends, new Set([...seen, name]));
+  const documents = uniqueByFile([
+    ...(parent.documents || []),
+    ...(profile.documents || []),
+  ]);
+  const conditionalHints = uniqueByFile([
+    ...(parent.conditionalHints || []),
+    ...(profile.conditionalHints || []),
+  ]);
+
+  return {
+    ...parent,
+    ...profile,
+    documents,
+    conditionalHints,
+  };
+}
+
 function usage() {
-  console.log(`Usage: node scripts/init.mjs <target-directory> [--agent codex|claude|antigravity|all] [--profile base|fullstack-ai|macos|presentation|agent] [--all]`);
+  const profiles = availableProfiles().join('|') || 'base';
+  let fixedDocs = [];
+  try {
+    fixedDocs = loadProfile('base').documents
+      .filter((doc) => doc.required)
+      .map((doc) => doc.file);
+  } catch {
+    fixedDocs = [];
+  }
+
+  console.log(`Usage: node scripts/init.mjs <target-directory> [--agent codex|claude|antigravity|all] [--profile ${profiles}] [--all]`);
   console.log();
   console.log('Defaults: --agent codex --profile base');
-  console.log('--all copies every markdown template except templates/README.md.');
-  console.log();
-  console.log('Fixed documents:');
-  for (const doc of FIXED_DOCS) console.log(`  - ${doc}`);
+  console.log('--all copies every fixed and conditional markdown template.');
+  if (fixedDocs.length > 0) {
+    console.log();
+    console.log('Base required documents:');
+    for (const doc of fixedDocs) console.log(`  - ${doc}`);
+  }
   process.exit(0);
 }
 
@@ -101,38 +129,70 @@ function parseArgs(argv) {
 
   if (!options.targetDir) usage();
   if (!AGENTS.has(options.agent)) throw new Error(`Invalid --agent: ${options.agent}`);
-  if (!Object.hasOwn(PROFILE_DOCS, options.profile)) throw new Error(`Invalid --profile: ${options.profile}`);
 
   return options;
 }
 
-function allTemplateFiles() {
-  return fs.readdirSync(TEMPLATES_DIR)
-    .filter((f) => f.endsWith('.md') && f !== 'README.md')
-    .sort();
+function collectMarkdownFiles(dir) {
+  if (!fs.existsSync(dir)) return [];
+
+  const files = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...collectMarkdownFiles(fullPath));
+    } else if (entry.isFile() && entry.name.endsWith('.md')) {
+      files.push(fullPath);
+    }
+  }
+  return files;
 }
 
-function unique(items) {
-  return [...new Set(items)];
+function templateIndex() {
+  const index = new Map();
+  for (const group of ['fixed', 'conditional']) {
+    const groupDir = path.join(TEMPLATES_DIR, group);
+    for (const filePath of collectMarkdownFiles(groupDir)) {
+      index.set(path.basename(filePath), {
+        file: path.basename(filePath),
+        template: path.relative(TEMPLATES_DIR, filePath),
+        category: group,
+        required: false,
+        trigger: '--all',
+      });
+    }
+  }
+  return index;
 }
 
-function copyTemplate(file, targetDir, stats) {
-  const src = path.join(TEMPLATES_DIR, file);
-  const dest = path.join(targetDir, file);
+function allTemplateDocs() {
+  return [...templateIndex().values()]
+    .sort((a, b) => a.file.localeCompare(b.file));
+}
 
-  if (!fs.existsSync(src)) {
-    console.warn(`  WARN Template not found: ${file}`);
+function templateSource(doc) {
+  if (doc.template) return path.join(TEMPLATES_DIR, doc.template);
+  const indexed = templateIndex().get(doc.file);
+  return indexed ? path.join(TEMPLATES_DIR, indexed.template) : null;
+}
+
+function copyTemplate(doc, targetDir, stats) {
+  const src = templateSource(doc);
+  const dest = path.join(targetDir, doc.file);
+
+  if (!src || !fs.existsSync(src)) {
+    console.warn(`  WARN Template not found: ${doc.file}`);
     return;
   }
 
   if (fs.existsSync(dest)) {
-    console.log(`  SKIP Already exists: ${file}`);
+    console.log(`  SKIP Already exists: ${doc.file}`);
     stats.skipped += 1;
     return;
   }
 
   fs.copyFileSync(src, dest);
-  console.log(`  COPY ${file}`);
+  console.log(`  COPY ${doc.file}`);
   stats.copied += 1;
 }
 
@@ -145,12 +205,23 @@ function writeGenerated(file, targetDir, content, stats) {
     return;
   }
 
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
   fs.writeFileSync(dest, `${content.trim()}\n`);
   console.log(`  GEN  ${file}`);
   stats.generated += 1;
 }
 
+function listDocs(docs) {
+  if (docs.length === 0) return '- None';
+  return docs.map((doc) => `- ${doc.file}: ${doc.trigger}`).join('\n');
+}
+
 function startHereContent(agent, profile) {
+  const requiredDocs = profile.documents.filter((doc) => doc.required);
+  const includedDocs = profile.documents.filter((doc) => !doc.required);
+  const includedFiles = new Set(profile.documents.map((doc) => doc.file));
+  const conditionalHints = profile.conditionalHints.filter((doc) => !includedFiles.has(doc.file));
+
   return `# START_HERE.md
 
 ## Purpose
@@ -160,19 +231,15 @@ This project was initialized from agent-governance-starter. The agent must compl
 ## Read Order
 
 1. This file.
-2. The runtime instruction file for the active agent: AGENTS.md, CLAUDE.md, or ANTIGRAVITY.md.
-3. PROJECT_BRIEF.md.
-4. SPEC.md.
-5. CONTEXT.md.
-6. TASK_CONTRACT.md.
-7. OPEN_LOOPS.md.
-8. TECH_STACK.md.
-9. Conditional documents when the project type requires them.
+2. The runtime instruction file for the active agent: AGENTS.md, CLAUDE.md, or .agents/AGENTS.md.
+3. Required documents listed below.
+4. Included profile documents listed below.
+5. Conditional documents when the project type requires them.
 
 ## Runtime
 
 - Initialized agent: ${agent}
-- Init profile: ${profile}
+- Init profile: ${profile.name}
 
 ## Q1-Q9 Intake
 
@@ -186,31 +253,17 @@ Q7. Where will this run: local, preview, or production?
 Q8. Which tools or technologies are already decided?
 Q9. Are there hard requirements for performance, scale, privacy, or compliance?
 
-## Fixed Documents
+## Required Documents
 
-- PROJECT_BRIEF.md
-- SPEC.md
-- CONTEXT.md
-- TASK_CONTRACT.md
-- OPEN_LOOPS.md
-- AGENTS.md
-- TECH_STACK.md
+${listDocs(requiredDocs)}
+
+## Included Profile Documents
+
+${listDocs(includedDocs)}
 
 ## Conditional Documents
 
-- UI_SPEC.md: UI, website, app, dashboard, landing page
-- DESIGN_SYSTEM.md: screenshots, existing UI, competitor UI, design tokens
-- DESIGN_REVIEW.md: UI review, beta, launch, visual QA
-- DATA_MODEL.md: database, Auth, tenant, permissions, core entities
-- API_CONTRACT.md: API routes, server actions, webhooks, adapters
-- ENV_CHECKLIST.md: deployment, third-party APIs, env vars, secrets
-- PRESENTATION_BRIEF.md: slides, one-pager, white paper, resume, portfolio
-- TESTER_HANDOFF.md: beta, tester handoff, preview sharing
-- MACOS_RELEASE_CHECKLIST.md: macOS build, signing, TCC, DMG, notarization
-- AGENT_RUNTIME.md: production-facing LLM agent, automation, tool use
-- RAG_DESIGN.md: retrieval, knowledge base, document Q&A, citation
-- EVAL_PLAN.md: LLM, RAG, agent regression testing
-- AI_SECURITY_REVIEW.md: prompt injection, tenant data, PII, tool risk
+${listDocs(conditionalHints)}
 
 ## Gate
 
@@ -271,9 +324,11 @@ function agentsContent() {
 function claudeContent() {
   return `# CLAUDE.md
 
-## Claude Code Start
+@AGENTS.md
 
-Read START_HERE.md, AGENTS.md, and this file before making changes.
+## Claude Code Adapter
+
+AGENTS.md is the canonical project rule source. This file is a thin Claude Code adapter only.
 
 ## First Response
 
@@ -287,23 +342,59 @@ Report:
 Then start Q1-Q9 intake. Ask one question at a time.`;
 }
 
-function antigravityContent() {
-  return `# ANTIGRAVITY.md
+function antigravityAgentsContent() {
+  return `# Antigravity Managed Agent
 
-## Antigravity Start
+Canonical project rules live in ../AGENTS.md. Read ../START_HERE.md and ../AGENTS.md before using these skills.
 
-Read START_HERE.md, AGENTS.md, and this file before implementing app code.
+## Skills
 
-## First Response
+- bootstrap-intake: start Q1-Q9 intake and document selection.
+- validation-gate: check required docs, open loops, and verification before implementation or handoff.
 
-Report:
-- files read
-- fixed documents present
-- conditional documents likely needed
-- open blockers
-- why implementation cannot start yet
+## Boundary
 
-Then start Q1-Q9 intake. Ask one question at a time.`;
+This adapter must not duplicate the canonical AGENTS.md rules.`;
+}
+
+function bootstrapIntakeSkillContent() {
+  return `---
+name: bootstrap-intake
+description: Start a governance bootstrap by reading START_HERE.md, AGENTS.md, and required docs before code changes.
+---
+
+# Bootstrap Intake
+
+## Trigger
+
+Use when a project is newly initialized or the user asks to start governed agent work.
+
+## Steps
+
+1. Read ../../../START_HERE.md and ../../../AGENTS.md.
+2. Report files read, required documents present, likely conditional documents, and blockers.
+3. Ask Q1-Q9 one question at a time.
+4. Stop before implementation until intake, required docs, TASK_CONTRACT.md, and OPEN_LOOPS.md are confirmed.`;
+}
+
+function validationGateSkillContent() {
+  return `---
+name: validation-gate
+description: Check governance documents and verification state before implementation, release, or handoff.
+---
+
+# Validation Gate
+
+## Trigger
+
+Use before starting implementation, before reporting completion, or before handing work to another agent.
+
+## Steps
+
+1. Check PROJECT_BRIEF.md, SPEC.md, CONTEXT.md, TASK_CONTRACT.md, OPEN_LOOPS.md, AGENTS.md, and TECH_STACK.md.
+2. Confirm conditional documents exist when the project surface requires them.
+3. Run the repo-specific verification command if AGENTS.md defines one.
+4. Report passed checks, blocked checks, and open loops without treating warnings as completion.`;
 }
 
 function runtimeFiles(agent) {
@@ -311,7 +402,9 @@ function runtimeFiles(agent) {
     return [
       ['AGENTS.md', agentsContent()],
       ['CLAUDE.md', claudeContent()],
-      ['ANTIGRAVITY.md', antigravityContent()],
+      ['.agents/AGENTS.md', antigravityAgentsContent()],
+      ['.agents/skills/bootstrap-intake/SKILL.md', bootstrapIntakeSkillContent()],
+      ['.agents/skills/validation-gate/SKILL.md', validationGateSkillContent()],
     ];
   }
 
@@ -330,13 +423,28 @@ function runtimeFiles(agent) {
 
   return [
     ['AGENTS.md', agentsContent()],
-    ['ANTIGRAVITY.md', antigravityContent()],
+    ['.agents/AGENTS.md', antigravityAgentsContent()],
+    ['.agents/skills/bootstrap-intake/SKILL.md', bootstrapIntakeSkillContent()],
+    ['.agents/skills/validation-gate/SKILL.md', validationGateSkillContent()],
   ];
 }
 
+function projectConfigContent(options, profile) {
+  return JSON.stringify({
+    schemaVersion: 1,
+    generator: 'agent-governance-starter',
+    profile: profile.name,
+    agent: options.agent,
+    requiredDocuments: profile.documents.filter((doc) => doc.required).map((doc) => doc.file),
+    includedDocuments: profile.documents.map((doc) => doc.file),
+  }, null, 2);
+}
+
 let options;
+let profile;
 try {
   options = parseArgs(process.argv.slice(2));
+  profile = loadProfile(options.profile);
 } catch (error) {
   console.error(error.message);
   process.exit(1);
@@ -351,14 +459,15 @@ if (!fs.existsSync(targetDir)) {
 }
 
 const templateDocs = options.all
-  ? allTemplateFiles()
-  : unique([...FIXED_DOCS, ...PROFILE_DOCS[options.profile]]);
+  ? allTemplateDocs()
+  : profile.documents.filter((doc) => doc.category !== 'runtime');
 
-for (const file of templateDocs.filter((file) => file !== 'AGENTS.md')) {
-  copyTemplate(file, targetDir, stats);
+for (const doc of templateDocs) {
+  copyTemplate(doc, targetDir, stats);
 }
 
-writeGenerated('START_HERE.md', targetDir, startHereContent(options.agent, options.profile), stats);
+writeGenerated('START_HERE.md', targetDir, startHereContent(options.agent, profile), stats);
+writeGenerated(PROJECT_CONFIG_FILE, targetDir, projectConfigContent(options, profile), stats);
 
 for (const [file, content] of runtimeFiles(options.agent)) {
   writeGenerated(file, targetDir, content, stats);

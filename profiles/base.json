@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "name": "base",
+  "description": "Fixed governance documents plus the canonical AGENTS runtime entrypoint.",
+  "documents": [
+    {
+      "file": "PROJECT_BRIEF.md",
+      "template": "fixed/PROJECT_BRIEF.md",
+      "category": "fixed",
+      "required": true,
+      "trigger": "Every project"
+    },
+    {
+      "file": "SPEC.md",
+      "template": "fixed/SPEC.md",
+      "category": "fixed",
+      "required": true,
+      "trigger": "Every project"
+    },
+    {
+      "file": "CONTEXT.md",
+      "template": "fixed/CONTEXT.md",
+      "category": "fixed",
+      "required": true,
+      "trigger": "Every project"
+    },
+    {
+      "file": "TASK_CONTRACT.md",
+      "template": "fixed/TASK_CONTRACT.md",
+      "category": "fixed",
+      "required": true,
+      "trigger": "Every project"
+    },
+    {
+      "file": "OPEN_LOOPS.md",
+      "template": "fixed/OPEN_LOOPS.md",
+      "category": "fixed",
+      "required": true,
+      "trigger": "Every project"
+    },
+    {
+      "file": "AGENTS.md",
+      "template": "runtime/AGENTS.md",
+      "category": "runtime",
+      "required": true,
+      "trigger": "Every project"
+    },
+    {
+      "file": "TECH_STACK.md",
+      "template": "fixed/TECH_STACK.md",
+      "category": "fixed",
+      "required": true,
+      "trigger": "Every project"
+    }
+  ],
+  "conditionalHints": [
+    {
+      "file": "UI_SPEC.md",
+      "template": "conditional/UI_SPEC.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Has UI / website / dashboard / landing page"
+    },
+    {
+      "file": "DESIGN_SYSTEM.md",
+      "template": "conditional/DESIGN_SYSTEM.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Has screenshots / existing UI to extract design rules from"
+    },
+    {
+      "file": "DESIGN_REVIEW.md",
+      "template": "conditional/DESIGN_REVIEW.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Has UI review / beta / launch / visual QA"
+    },
+    {
+      "file": "DATA_MODEL.md",
+      "template": "conditional/DATA_MODEL.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Has DB / Auth / tenant / permissions"
+    },
+    {
+      "file": "API_CONTRACT.md",
+      "template": "conditional/API_CONTRACT.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Has API routes / server actions / webhooks"
+    },
+    {
+      "file": "ENV_CHECKLIST.md",
+      "template": "conditional/ENV_CHECKLIST.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Has deployment / third-party API keys"
+    },
+    {
+      "file": "PRESENTATION_BRIEF.md",
+      "template": "conditional/PRESENTATION_BRIEF.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Has presentation / slide deck / one-pager deliverable"
+    },
+    {
+      "file": "TESTER_HANDOFF.md",
+      "template": "conditional/TESTER_HANDOFF.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Has beta / tester handoff requirement"
+    },
+    {
+      "file": "MACOS_RELEASE_CHECKLIST.md",
+      "template": "conditional/MACOS_RELEASE_CHECKLIST.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Has macOS app build / TCC / signing"
+    },
+    {
+      "file": "AGENT_RUNTIME.md",
+      "template": "conditional/AGENT_RUNTIME.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Has production-facing LLM agent / automation"
+    },
+    {
+      "file": "RAG_DESIGN.md",
+      "template": "conditional/RAG_DESIGN.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Has retrieval / knowledge base / document Q&A"
+    },
+    {
+      "file": "EVAL_PLAN.md",
+      "template": "conditional/EVAL_PLAN.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Has LLM/RAG/agent output needing regression testing"
+    },
+    {
+      "file": "AI_SECURITY_REVIEW.md",
+      "template": "conditional/AI_SECURITY_REVIEW.md",
+      "category": "conditional",
+      "required": false,
+      "trigger": "Has prompt injection / tenant data / PII risks"
+    }
+  ]
+}

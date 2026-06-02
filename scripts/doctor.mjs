@@ -1,24 +1,42 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const STARTER_ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const PROFILES_DIR = path.join(STARTER_ROOT, 'profiles');
+const PROJECT_CONFIG_FILE = '.agent-governance.json';
 
 function usage() {
-  console.log('Usage: node scripts/doctor.mjs [--strict] <project-directory>');
+  console.log('Usage: node scripts/doctor.mjs [--strict] [--json] [--profile base|fullstack-ai|macos] <project-directory>');
   console.log();
   console.log('--strict treats warnings as failures.');
+  console.log('--json emits machine-readable doctor output.');
   process.exit(0);
 }
 
 function parseArgs(argv) {
   const options = {
     strict: false,
+    json: false,
+    profile: null,
     projectDir: null,
   };
 
-  for (const arg of argv) {
+  for (let i = 0; i < argv.length; i += 1) {
+    const arg = argv[i];
     if (arg === '--help' || arg === '-h') usage();
     if (arg === '--strict') {
       options.strict = true;
+      continue;
+    }
+    if (arg === '--json') {
+      options.json = true;
+      continue;
+    }
+    if (arg === '--profile') {
+      options.profile = argv[i + 1];
+      i += 1;
       continue;
     }
     if (arg.startsWith('--')) {
@@ -34,6 +52,43 @@ function parseArgs(argv) {
   return options;
 }
 
+function readJson(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
+function uniqueByFile(items) {
+  const byFile = new Map();
+  for (const item of items) byFile.set(item.file, item);
+  return [...byFile.values()];
+}
+
+function loadProfile(name, seen = new Set()) {
+  const profilePath = path.join(PROFILES_DIR, `${name}.json`);
+  if (!fs.existsSync(profilePath)) {
+    throw new Error(`Unknown profile: ${name}`);
+  }
+  if (seen.has(name)) {
+    throw new Error(`Profile extends cycle: ${[...seen, name].join(' -> ')}`);
+  }
+
+  const profile = readJson(profilePath);
+  if (!profile.extends) {
+    return {
+      ...profile,
+      documents: profile.documents || [],
+      conditionalHints: profile.conditionalHints || [],
+    };
+  }
+
+  const parent = loadProfile(profile.extends, new Set([...seen, name]));
+  return {
+    ...parent,
+    ...profile,
+    documents: uniqueByFile([...(parent.documents || []), ...(profile.documents || [])]),
+    conditionalHints: uniqueByFile([...(parent.conditionalHints || []), ...(profile.conditionalHints || [])]),
+  };
+}
+
 let options;
 try {
   options = parseArgs(process.argv.slice(2));
@@ -43,6 +98,7 @@ try {
 }
 
 const projectDir = options.projectDir;
+const displayProjectDir = path.relative(process.cwd(), projectDir) || '.';
 
 function exists(relativePath) {
   return fs.existsSync(path.join(projectDir, relativePath));
@@ -50,6 +106,14 @@ function exists(relativePath) {
 
 function readFile(relativePath) {
   return fs.readFileSync(path.join(projectDir, relativePath), 'utf8');
+}
+
+function projectProfileName() {
+  if (options.profile) return options.profile;
+  const configPath = path.join(projectDir, PROJECT_CONFIG_FILE);
+  if (!fs.existsSync(configPath)) return 'base';
+  const config = readJson(configPath);
+  return config.profile || 'base';
 }
 
 function hasContent(relativePath) {
@@ -80,108 +144,160 @@ function hasContent(relativePath) {
   return filledLines.length > 5;
 }
 
-const checks = [];
-const warnings = [];
+function statusForRequired(doc) {
+  if (!exists(doc.file)) return 'missing';
+  if (!hasContent(doc.file)) return 'unfilled';
+  return 'ok';
+}
 
-const fixedDocs = [
-  'PROJECT_BRIEF.md',
-  'SPEC.md',
-  'CONTEXT.md',
-  'TASK_CONTRACT.md',
-  'OPEN_LOOPS.md',
-  'AGENTS.md',
-  'TECH_STACK.md',
-];
+function buildResult(profile) {
+  const warnings = [];
+  const requiredDocs = profile.documents.filter((doc) => doc.required);
+  const recommendedDocs = profile.documents.filter((doc) => !doc.required);
+  const profileFiles = new Set(profile.documents.map((doc) => doc.file));
 
-for (const doc of fixedDocs) {
-  if (!exists(doc)) {
-    checks.push(`MISSING ${doc}`);
-  } else if (!hasContent(doc)) {
-    checks.push(`WARN Unfilled template: ${doc}`);
-    warnings.push(`${doc} exists but appears to be an unfilled template`);
+  const required = requiredDocs.map((doc) => ({
+    file: doc.file,
+    status: statusForRequired(doc),
+    trigger: doc.trigger,
+  }));
+
+  const recommended = recommendedDocs.map((doc) => {
+    const present = exists(doc.file);
+    if (!present) warnings.push(`${doc.file} is included by profile ${profile.name} but is missing`);
+    return {
+      file: doc.file,
+      status: present ? 'present' : 'absent',
+      trigger: doc.trigger,
+    };
+  });
+
+  const conditional = profile.conditionalHints
+    .filter((doc) => !profileFiles.has(doc.file))
+    .map((doc) => ({
+      file: doc.file,
+      present: exists(doc.file),
+      trigger: doc.trigger,
+    }));
+
+  for (const check of required) {
+    if (check.status === 'unfilled') {
+      warnings.push(`${check.file} exists but appears to be an unfilled template`);
+    }
+  }
+
+  if (exists('SPEC.md')) {
+    const spec = readFile('SPEC.md');
+    if (!spec.includes('yes') && !spec.includes('no') && !spec.includes('是') && !spec.includes('否') && !spec.includes('[ ]') && !spec.includes('[x]')) {
+      warnings.push('SPEC.md: acceptance criteria should be yes/no testable');
+    }
+  }
+
+  if (exists('TASK_CONTRACT.md')) {
+    const tc = readFile('TASK_CONTRACT.md');
+    if (!tc.includes('驗證') && !tc.includes('verif') && !tc.includes('test')) {
+      warnings.push('TASK_CONTRACT.md: tasks should each have a verification method');
+    }
+  }
+
+  const missing = required.filter((check) => check.status === 'missing').map((check) => check.file);
+  const unfilled = required.filter((check) => check.status === 'unfilled').map((check) => check.file);
+  const status = missing.length > 0 ? 'missing' : warnings.length > 0 ? 'warning' : 'ready';
+
+  return {
+    schemaVersion: 1,
+    projectDir: displayProjectDir,
+    profile: profile.name,
+    status,
+    strict: options.strict,
+    required,
+    recommended,
+    conditional,
+    warnings,
+    missing,
+    unfilled,
+  };
+}
+
+function printHuman(result) {
+  console.log(`\nProject doctor: ${displayProjectDir}`);
+  if (options.strict) console.log('Mode: strict');
+  console.log(`Profile: ${result.profile}`);
+  console.log();
+
+  console.log('Required documents:');
+  for (const check of result.required) {
+    if (check.status === 'missing') console.log(`  MISSING ${check.file}`);
+    else if (check.status === 'unfilled') console.log(`  WARN Unfilled template: ${check.file}`);
+    else console.log(`  OK ${check.file}`);
+  }
+  console.log();
+
+  const presentRecommended = result.recommended.filter((check) => check.status === 'present');
+  if (presentRecommended.length > 0) {
+    console.log('Profile documents (present):');
+    for (const check of presentRecommended) console.log(`  OK ${check.file}`);
+    console.log();
+  }
+
+  const presentConditional = result.conditional.filter((check) => check.present);
+  const absentConditional = result.conditional.filter((check) => !check.present);
+
+  if (presentConditional.length > 0) {
+    console.log('Conditional documents (present):');
+    for (const check of presentConditional) console.log(`  OK ${check.file}`);
+    console.log();
+  }
+
+  if (absentConditional.length > 0) {
+    console.log('Conditional documents (not present - check if needed):');
+    for (const check of absentConditional) console.log(`  - ${check.file} - needed if: ${check.trigger}`);
+    console.log();
+  }
+
+  if (result.warnings.length > 0) {
+    console.log('Warnings:');
+    for (const warning of result.warnings) console.log(`  WARN ${warning}`);
+    console.log();
+  }
+
+  if (result.missing.length > 0) {
+    console.log(`Result: ${result.missing.length} required document(s) missing. Not ready to proceed.`);
+    return;
+  }
+
+  if (options.strict && result.warnings.length > 0) {
+    console.log(`Result: Strict mode failed with ${result.warnings.length} warning(s).`);
+    return;
+  }
+
+  if (result.warnings.length > 0) {
+    console.log(`Result: All required documents present. ${result.warnings.length} warning(s) to review.`);
   } else {
-    checks.push(`OK ${doc}`);
+    console.log('Result: All required documents present and filled. Ready to proceed.');
   }
 }
 
-if (exists('SPEC.md')) {
-  const spec = readFile('SPEC.md');
-  if (!spec.includes('yes') && !spec.includes('no') && !spec.includes('是') && !spec.includes('否') && !spec.includes('[ ]') && !spec.includes('[x]')) {
-    warnings.push('SPEC.md: acceptance criteria should be yes/no testable');
-  }
-}
-
-if (exists('TASK_CONTRACT.md')) {
-  const tc = readFile('TASK_CONTRACT.md');
-  if (!tc.includes('驗證') && !tc.includes('verif') && !tc.includes('test')) {
-    warnings.push('TASK_CONTRACT.md: tasks should each have a verification method');
-  }
-}
-
-const conditionalHints = [
-  { file: 'UI_SPEC.md', trigger: 'Has UI / website / dashboard / landing page' },
-  { file: 'DATA_MODEL.md', trigger: 'Has DB / Auth / tenant / permissions' },
-  { file: 'API_CONTRACT.md', trigger: 'Has API routes / server actions / webhooks' },
-  { file: 'ENV_CHECKLIST.md', trigger: 'Has deployment / third-party API keys' },
-  { file: 'AGENT_RUNTIME.md', trigger: 'Has production-facing LLM agent / automation' },
-  { file: 'RAG_DESIGN.md', trigger: 'Has retrieval / knowledge base / document Q&A' },
-  { file: 'EVAL_PLAN.md', trigger: 'Has LLM/RAG/agent output needing regression testing' },
-  { file: 'AI_SECURITY_REVIEW.md', trigger: 'Has prompt injection / tenant data / PII risks' },
-  { file: 'MACOS_RELEASE_CHECKLIST.md', trigger: 'Has macOS app build / TCC / signing' },
-  { file: 'DESIGN_SYSTEM.md', trigger: 'Has screenshots / existing UI to extract design rules from' },
-  { file: 'PRESENTATION_BRIEF.md', trigger: 'Has presentation / slide deck / one-pager deliverable' },
-  { file: 'TESTER_HANDOFF.md', trigger: 'Has beta / tester handoff requirement' },
-];
-
-const presentConditional = [];
-const absentConditional = [];
-for (const { file, trigger } of conditionalHints) {
-  if (exists(file)) {
-    presentConditional.push(`  OK ${file}`);
-  } else {
-    absentConditional.push(`  - ${file} - needed if: ${trigger}`);
-  }
-}
-
-console.log(`\nProject doctor: ${projectDir}`);
-if (options.strict) console.log('Mode: strict');
-console.log();
-
-console.log('Fixed documents:');
-for (const c of checks) console.log(`  ${c}`);
-console.log();
-
-if (presentConditional.length > 0) {
-  console.log('Conditional documents (present):');
-  for (const c of presentConditional) console.log(c);
-  console.log();
-}
-
-if (absentConditional.length > 0) {
-  console.log('Conditional documents (not present - check if needed):');
-  for (const c of absentConditional) console.log(c);
-  console.log();
-}
-
-if (warnings.length > 0) {
-  console.log('Warnings:');
-  for (const w of warnings) console.log(`  WARN ${w}`);
-  console.log();
-}
-
-const missing = checks.filter((c) => c.startsWith('MISSING'));
-if (missing.length > 0) {
-  console.log(`Result: ${missing.length} required document(s) missing. Not ready to proceed.`);
+let profile;
+let result;
+try {
+  profile = loadProfile(projectProfileName());
+  result = buildResult(profile);
+} catch (error) {
+  console.error(error.message);
   process.exit(1);
 }
 
-if (options.strict && warnings.length > 0) {
-  console.log(`Result: Strict mode failed with ${warnings.length} warning(s).`);
-  process.exit(1);
-}
-
-if (warnings.length > 0) {
-  console.log(`Result: All fixed documents present. ${warnings.length} warning(s) to review.`);
+if (options.json) {
+  console.log(JSON.stringify(result, null, 2));
 } else {
-  console.log('Result: All fixed documents present and filled. Ready to proceed.');
+  printHuman(result);
+}
+
+if (result.missing.length > 0) {
+  process.exit(1);
+}
+
+if (options.strict && result.warnings.length > 0) {
+  process.exit(1);
 }

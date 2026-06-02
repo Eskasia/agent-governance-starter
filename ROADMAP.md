@@ -3,7 +3,10 @@
 ## v1 Public Release
 
 - Keep the starter positioning clear: project governance starter for Codex, Claude Code, and Antigravity.
-- Maintain root runtime entrypoints: `AGENTS.md`, `CLAUDE.md`, and `ANTIGRAVITY.md`.
+- Maintain `AGENTS.md` as the canonical source of truth.
+- Keep `CLAUDE.md` as a thin adapter.
+- Keep generated Antigravity output under `.agents/AGENTS.md` and `.agents/skills/*/SKILL.md`.
+- Keep top-level `ANTIGRAVITY.md` limited to a legacy compatibility or migration note.
 - Keep `scripts/init.mjs`, `scripts/doctor.mjs`, and `scripts/validate-starter.mjs` covered by CI smoke checks.
 - Keep examples filled enough to pass strict doctor checks.
 
