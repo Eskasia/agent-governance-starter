@@ -247,11 +247,7 @@ for (const file of ['README.md', 'CLAUDE.md', 'ANTIGRAVITY.md']) {
 requireIncludes(errors, 'scripts/init.mjs', ['--agent', '--profile', '--all', 'START_HERE.md', '.agents/AGENTS.md', '.agents/skills/bootstrap-intake/SKILL.md']);
 requireIncludes(errors, 'scripts/doctor.mjs', ['--strict', '--json', 'warnings as failures']);
 requireIncludes(errors, '.github/workflows/validate-starter.yml', [
-  'node scripts/validate-starter.mjs .',
-  'node --check scripts/init.mjs',
-  'node scripts/init.mjs "$RUNNER_TEMP/base" --agent codex',
-  'node scripts/doctor.mjs --strict examples/template-adoption/fullstack-ai-saas',
-  'node scripts/doctor.mjs --strict examples/template-adoption/macos-beta-handoff',
+  'npm run ci',
 ]);
 
 for (const file of [

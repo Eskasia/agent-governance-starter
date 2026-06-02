@@ -9,13 +9,15 @@
 | `../startup/01-bootstrap-gates.md` | Q1-Q9 intake and progression gates |
 | `../startup/02-required-project-docs.md` | Required and conditional project docs |
 
-## Runtime Entrypoints
+## Runtime Entrypoints And Adapters
 
-| File | Runtime |
+| File | Runtime role |
 |---|---|
-| `../AGENTS.md` | Codex and general agent maintenance rules for this starter |
-| `../CLAUDE.md` | Claude Code bootstrap instructions |
-| `../ANTIGRAVITY.md` | Antigravity bootstrap instructions |
+| `../AGENTS.md` | Canonical source of truth for this starter |
+| `../CLAUDE.md` | Claude Code thin adapter |
+| `.agents/AGENTS.md` | Generated Antigravity adapter in initialized projects |
+| `.agents/skills/*/SKILL.md` | Generated Antigravity skills in initialized projects |
+| `../ANTIGRAVITY.md` | Legacy compatibility or migration note only |
 
 ## Workflow Docs
 
