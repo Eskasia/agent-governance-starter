@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "experimentId": "GS-OSS-2026-08-05-EFFECT-R2",
-  "status": "CONTRACT_TASK_IDENTITY_AND_SURFACE_IMPLEMENTATION_EVIDENCE_ONLY",
+  "status": "TERMINATED_AT_G2_FAIL",
   "artifacts": [
     {
       "path": "benchmarks/external-oss-effectiveness-r2/experiment-contract.schema.json",
@@ -33,7 +33,7 @@
     },
     {
       "path": "benchmarks/external-oss-effectiveness-r2/report.md",
-      "sha256": "c701640b83f0b0c399c1ed5d57fcac62dc304b7f76a6c301bca205a26b8f2e3b"
+      "sha256": "b4928c446d388fa7778be61532781d35e7814bd34aaddf85906dfed4b21b0a35"
     },
     {
       "path": "benchmarks/external-oss-effectiveness-r2/tasks/TASK-OSS-11/public-task.md",
@@ -130,6 +130,34 @@
     {
       "path": "benchmarks/external-oss-effectiveness-r2/tasks/TASK-OSS-18/task-package.json",
       "sha256": "8708c3f90d33fb815906536f5be333c1105cc5d46d82e8dea85a43e22f1ea7e5"
+    },
+    {
+      "path": "benchmarks/external-oss-effectiveness-r2/termination-report.md",
+      "sha256": "95ee9667d00d8bc3b892d0a7addfd6cfef8b114378356360cd1972fa208bac4c"
+    },
+    {
+      "path": "benchmarks/external-oss-v8/control/loop/reconciliation/issue-92-effect-r2-termination.json",
+      "sha256": "271efa0927049963c3dc1b318f691ff01b2490711df83fce5f5153980ac48523"
+    },
+    {
+      "path": "benchmarks/external-oss-v8/control/loop/task-graph.json",
+      "sha256": "abe359290ecfb48c59b1e01aa0d22e885b7d991de46257c86b6983ee0bd0b2e7"
+    },
+    {
+      "path": "benchmarks/external-oss-v8/control/loop/loop-state.json",
+      "sha256": "0132f2480adfb034c5c65457f3be4623b1335400946983c10e909903faa1721b"
+    },
+    {
+      "path": "benchmarks/external-oss-v8/control/loop/run-ledger.jsonl",
+      "sha256": "265b942679e049c825107e4a9b4294f81a7d8d8ba89dbbb9aa0b73a93fb48b47"
+    },
+    {
+      "path": "benchmarks/external-oss-v8/control/loop/decision-log.md",
+      "sha256": "27b653bf226cb07bcd59aca7bde8b54b38ea915634a44921d401cf8966633e38"
+    },
+    {
+      "path": "benchmarks/external-oss-v8/control/loop/human-gates.md",
+      "sha256": "8e1836674327e3aebd537947cac16a91c6dc279e743b8043b25320662542aed3"
     }
   ],
   "sourceBindings": [
@@ -159,5 +187,37 @@
     }
   ],
   "selfBinding": "The evidence index is bound by the Git tree and commit; self-hashing is intentionally not used.",
-  "executionEvidence": "NOT_RUN"
+  "executionEvidence": {
+    "G2": "FAIL",
+    "G3": "NOT_RUN_INELIGIBLE",
+    "Pilot": "NOT_RUN_INELIGIBLE",
+    "confirmatory": "NOT_RUN_INELIGIBLE",
+    "scoring": "NOT_RUN_INELIGIBLE",
+    "independentEffectivenessReview": "NOT_RUN_INELIGIBLE",
+    "finalAcceptance": "NOT_RUN_INELIGIBLE",
+    "weightedCompletionPercent": 33,
+    "effectivenessConclusion": "INCONCLUSIVE"
+  },
+  "terminationEvidence": {
+    "issue": 92,
+    "ownerCommentId": 5229210405,
+    "ownerCommentUrl": "https://github.com/Eskasia/governseed/issues/92#issuecomment-5229210405",
+    "ownerCommentBodySha256": "f884861b202aa76d6ae736df30f1785fcad83063b67ab8ce70be69711987830d",
+    "zeroAdditionalProviderSpend": true,
+    "preservedRunIds": [
+      31014045209,
+      31032816504,
+      31258029890,
+      31263886864,
+      31288483975
+    ]
+  },
+  "accounting": {
+    "conservativeGovernanceReservationUsd": 11,
+    "providerUsageValue": "UNKNOWN",
+    "creditsOrGrantsApplied": "UNKNOWN",
+    "actualOutOfPocketCashCharged": "UNKNOWN",
+    "additionalProviderSpendAuthorizedUsd": 0
+  },
+  "claimBoundary": "No claim that GovernSeed improves effectiveness."
 }

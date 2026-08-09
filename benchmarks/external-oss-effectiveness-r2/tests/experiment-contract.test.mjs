@@ -12,6 +12,7 @@ const manifest = readJson(`${ROOT}/attempt-manifest.json`);
 const gates = readJson(`${ROOT}/gate-policy.json`);
 const evidence = readJson(`${ROOT}/evidence-index.json`);
 const resolution = readJson('benchmarks/external-oss-v8/control/loop/reconciliation/issue-84-comment-5186392861.json');
+const termination = readJson('benchmarks/external-oss-v8/control/loop/reconciliation/issue-92-effect-r2-termination.json');
 
 test('R2 is owner-authorized, supersedes unexecuted R1, and cannot pool evidence', () => {
   assert.equal(contract.experimentId, 'GS-OSS-2026-08-05-EFFECT-R2');
@@ -98,6 +99,33 @@ test('scorer and every evidence-index hash binding match current bytes', () => {
   }
 });
 
+test('R2 is terminated at G2 FAIL and cannot enter an effectiveness stage', () => {
+  assert.equal(evidence.status, 'TERMINATED_AT_G2_FAIL');
+  assert.equal(evidence.executionEvidence.G2, 'FAIL');
+  assert.equal(evidence.executionEvidence.G3, 'NOT_RUN_INELIGIBLE');
+  assert.equal(evidence.executionEvidence.Pilot, 'NOT_RUN_INELIGIBLE');
+  assert.equal(evidence.executionEvidence.confirmatory, 'NOT_RUN_INELIGIBLE');
+  assert.equal(evidence.executionEvidence.scoring, 'NOT_RUN_INELIGIBLE');
+  assert.equal(evidence.executionEvidence.independentEffectivenessReview, 'NOT_RUN_INELIGIBLE');
+  assert.equal(evidence.executionEvidence.finalAcceptance, 'NOT_RUN_INELIGIBLE');
+  assert.equal(evidence.executionEvidence.weightedCompletionPercent, 33);
+  assert.equal(evidence.executionEvidence.effectivenessConclusion, 'INCONCLUSIVE');
+  assert.equal(evidence.terminationEvidence.ownerCommentId, 5229210405);
+  assert.equal(evidence.terminationEvidence.zeroAdditionalProviderSpend, true);
+  assert.deepEqual(
+    evidence.terminationEvidence.preservedRunIds,
+    [31014045209, 31032816504, 31258029890, 31263886864, 31288483975],
+  );
+  assert.equal(termination.g2.status, 'FAIL');
+  assert.equal(termination.g2.successfulRuntimeIdentityArtifacts, 0);
+  assert.equal(termination.effectivenessConclusion, 'INCONCLUSIVE');
+  assert.match(termination.claimBoundary, /no claim that GovernSeed improves effectiveness/i);
+  assert.equal(evidence.accounting.providerUsageValue, 'UNKNOWN');
+  assert.equal(evidence.accounting.creditsOrGrantsApplied, 'UNKNOWN');
+  assert.equal(evidence.accounting.actualOutOfPocketCashCharged, 'UNKNOWN');
+  assert.equal(evidence.accounting.additionalProviderSpendAuthorizedUsd, 0);
+});
+
 test('contract includes the frozen analysis, acceptance, budgets, retention, and claim limits', () => {
   assert.equal(contract.analysis.method.iterations, 2000);
   assert.equal(contract.analysis.method.confidence, 0.95);
@@ -115,7 +143,7 @@ test('contract includes the frozen analysis, acceptance, budgets, retention, and
 test('committed R2 artifacts contain no local user paths or credential material', () => {
   const combined = [
     'experiment-contract.schema.json', 'experiment-contract.json', 'attempt-manifest.json',
-    'gate-policy.json', 'evidence-index.json', 'report.md',
+    'gate-policy.json', 'evidence-index.json', 'report.md', 'termination-report.md',
   ].map((name) => readFileSync(`${ROOT}/${name}`, 'utf8')).join('\n');
   assert.doesNotMatch(combined, /\/Users\//);
   assert.doesNotMatch(combined, /\bsk-[A-Za-z0-9_-]{20,}/);

@@ -185,4 +185,14 @@
 - Historical parent-red/fix-green evidence remains bound to the independently accepted PR `#87` reviewed tree; no result object is silently rewritten.
 - Decision: retain P1.4 as `HUMAN_GATE` at `31.0%`. A fresh independent review is `NOT_RUN` for the repaired head and requires a new exact one-request authorization after final head/tree and CI are externally bound.
 
-This log records gaps and decisions only. It does not authorize provider use, workflow dispatch, PR merge, G3, Pilot, confirmatory execution, scoring, or benchmark acceptance.
+## 2026-08-09 — R2 terminated at G2 FAIL
+
+- Status: `TERMINATED_AT_G2_FAIL`; weighted completion is `33%`.
+- OWNER decision [Issue #92 comment 5229210405](https://github.com/Eskasia/governseed/issues/92#issuecomment-5229210405), exact API-body SHA-256 `f884861b202aa76d6ae736df30f1785fcad83063b67ab8ce70be69711987830d`, sets `ZERO_ADDITIONAL_PROVIDER_SPEND=true` and revokes all remaining provider and experiment-execution authority.
+- G2 has no successful runtime-identity artifact. Runs `31014045209`, `31032816504`, `31258029890`, and `31288483975` are explicitly preserved; pre-existing run `31263886864` is also retained because append-only evidence cannot be silently omitted.
+- G3, Pilot, confirmatory execution, scoring, independent effectiveness review, and final acceptance are `NOT_RUN / INELIGIBLE`.
+- Provider usage value, credits or grants, and actual out-of-pocket cash are `UNKNOWN`. Conservative governance reservation is USD 11 and is not billing evidence.
+- Effectiveness conclusion: `INCONCLUSIVE`. No baseline or GovernSeed arm ran, so no claim that GovernSeed improves effectiveness is supported.
+- Decision: complete only zero-provider-cost reconciliation, indexing, local verification, and the termination report. Do not retry, rerun, dispatch a provider workflow, approve a provider Environment, formal-lock, execute, score, review effectiveness, or accept the benchmark.
+
+This log records gaps and decisions only. It does not authorize provider use, workflow dispatch, G3, Pilot, confirmatory execution, scoring, or benchmark acceptance.
