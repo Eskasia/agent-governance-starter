@@ -1,4 +1,16 @@
-# Current human gates
+# Human gates — experiment terminated
+
+## EFFECT_R2_TERMINATION_AT_G2_FAIL
+
+- Status: `SATISFIED`; OWNER termination is [Issue #92 comment 5229210405](https://github.com/Eskasia/governseed/issues/92#issuecomment-5229210405), exact API-body SHA-256 `f884861b202aa76d6ae736df30f1785fcad83063b67ab8ce70be69711987830d`.
+- Final gate state: G2 `FAIL`; G3, Pilot, confirmatory execution, scoring, independent effectiveness review, and final acceptance are `NOT_RUN / INELIGIBLE`.
+- Spending state: `ZERO_ADDITIONAL_PROVIDER_SPEND=true`; no provider request, provider-consuming workflow, provider Environment approval, retry, rerun, fallback, replacement, Pilot, confirmatory run, or scoring is authorized.
+- Accounting: conservative governance reservation USD 11; provider usage value, credits or grants, and actual out-of-pocket cash are `UNKNOWN`.
+- Completion: `33%`; effectiveness conclusion `INCONCLUSIVE`.
+- Claim boundary: no claim that GovernSeed improves effectiveness.
+- Remaining authorized work: zero-provider-cost control-plane reconciliation, append-only evidence indexing, local deterministic verification, and publication of the final termination report only.
+
+All gates below are historical records. They grant no current authority and cannot reactivate this terminated experiment.
 
 ## PUBLIC_HIDDEN_SEPARATION_INDEPENDENT_REVIEW_AUTHORIZATION
 
